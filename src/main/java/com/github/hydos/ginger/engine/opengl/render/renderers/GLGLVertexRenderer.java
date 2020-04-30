@@ -1,12 +1,11 @@
 package com.github.hydos.ginger.engine.opengl.render.renderers;
 
-import com.github.hydos.ginger.engine.common.api.GingerRegister;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.common.math.Maths;
 import com.github.hydos.ginger.engine.common.render.Renderer;
 import com.github.hydos.ginger.engine.opengl.render.GLRenderManager;
 import com.github.hydos.ginger.engine.opengl.render.models.RawModel;
-import com.github.hydos.ginger.engine.opengl.render.shaders.GLStaticShader;
+import com.github.hydos.ginger.engine.opengl.render.shaders.GLObjectShader;
 import gln64j.GLN64jPlugin;
 import gln64j.OpenGlGdp;
 import org.joml.Matrix4f;
@@ -17,9 +16,9 @@ import org.lwjgl.opengl.GL30;
 
 public class GLGLVertexRenderer extends Renderer {
 
-    private final GLStaticShader shader;
+    private final GLObjectShader shader;
 
-    public GLGLVertexRenderer(GLStaticShader shader, Matrix4f projectionMatrix) {
+    public GLGLVertexRenderer(GLObjectShader shader, Matrix4f projectionMatrix) {
         this.shader = shader;
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);

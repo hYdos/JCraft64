@@ -1,6 +1,17 @@
 package gln64j;
 
+import com.github.hydos.ginger.engine.common.api.GingerEngine;
+import com.github.hydos.ginger.engine.common.cameras.Camera;
+import com.github.hydos.ginger.engine.common.cameras.FirstPersonCamera;
+import com.github.hydos.ginger.engine.common.info.RenderAPI;
+import com.github.hydos.ginger.engine.common.io.Window;
+import com.github.hydos.ginger.engine.opengl.api.GingerGL;
+import com.github.hydos.ginger.engine.opengl.render.GLRenderManager;
+import com.github.hydos.ginger.engine.opengl.render.renderers.GLGLVertexRenderer;
+import com.github.hydos.ginger.engine.opengl.render.shaders.GLObjectShader;
+import com.github.hydos.ginger.engine.opengl.utils.GLUtils;
 import gln64j.rsp.Gsp;
+import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 
 import java.nio.FloatBuffer;
 import javax.swing.JFrame;
@@ -56,12 +67,18 @@ public class OpenGl {
         public void init(GLAutoDrawable gLDrawable) {
             gl = gLDrawable.getGL();
             OpenGlGdp.init(gl);
-            
+            Window.create(1020, 860, "Ginger Video plugin", 60, RenderAPI.OpenGL);
+            GLUtils.init();
+            GLN64jPlugin.renderer = new GLGLVertexRenderer(new GLObjectShader(), GLRenderManager.createProjectionMatrix());
+            GLN64jPlugin.camera = new FirstPersonCamera();
+            GingerGL gingerGL = new GingerGL();
+            gingerGL.setup(new GingerHandler());
             Rsp.gsp.changed = Rsp.gdp.changed = 0xFFFFFFFF;
         }
         
         public void display(GLAutoDrawable gLDrawable) {
             try {
+                Window.update();
                 OpenGlGdp.VI_UpdateSize();
                 OpenGlGdp.OGL_UpdateScale();
 
@@ -84,6 +101,7 @@ public class OpenGl {
 
                 Rsp.gsp.loadUcode(uc_start, uc_dstart);
                 Rsp.gsp.RSP_ProcessDList();
+                Window.swapBuffers();
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -137,6 +155,7 @@ public class OpenGl {
         gl = canvas.getGL();
         OpenGlGdp.hDC = canvas;
         OpenGlGdp.hDC.swapBuffers(); //TMP
+        Window.swapBuffers();
     }
 
     private static void OGL_UpdateCullFace() {

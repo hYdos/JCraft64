@@ -23,7 +23,7 @@ public class GLUtils
 	}
 
 	public static void init()
-	{ TextMaster.init(); }
+	{}
 
 	public static void preRenderScene(GLRenderManager renderer)
 	{}

@@ -1,5 +1,10 @@
 package gln64j;
 
+import com.github.hydos.ginger.engine.common.cameras.Camera;
+import com.github.hydos.ginger.engine.common.cameras.FirstPersonCamera;
+import com.github.hydos.ginger.engine.common.info.RenderAPI;
+import com.github.hydos.ginger.engine.common.io.Window;
+import com.github.hydos.ginger.engine.opengl.render.renderers.GLGLVertexRenderer;
 import me.hydos.J64.util.debug.Debug;
 import gln64j.rsp.Gsp;
 import gln64j.rdp.Gdp;
@@ -11,8 +16,6 @@ import plugin.GfxPlugin;
 
 public class GLN64jPlugin implements GfxPlugin {
     public static final boolean DEBUG = Debug.DEBUG_GLN64;
-
-    private static final int NUM_FRAMES = 7;
 
     public static JFrame hWnd;
 
@@ -26,6 +29,9 @@ public class GLN64jPlugin implements GfxPlugin {
     public static int RDRAMSize;
 
     private final String name;
+
+    public static GLGLVertexRenderer renderer;
+    public static FirstPersonCamera camera;
 
     public GLN64jPlugin() {
         name = this.getClass().getName();
@@ -105,7 +111,6 @@ public class GLN64jPlugin implements GfxPlugin {
         REG.VI_Registers = gfxInfo.viRegisters;
 
         CheckInterrupts = gfxInfo.checkInterrupts;
-
         return true;
     }
 

@@ -8,7 +8,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
-public class GLStaticShader extends ShaderProgram {
+public class GLObjectShader extends ShaderProgram {
     private static final int MAX_LIGHTS = 5;
     private int location_transformationMatrix;
     private int location_projectionMatrix;
@@ -21,7 +21,7 @@ public class GLStaticShader extends ShaderProgram {
     private int location_useFakeLighting;
     private int location_skyColour;
 
-    public GLStaticShader() {
+    public GLObjectShader() {
         super("entityVertexShader.glsl", "entityFragmentShader.glsl");
     }
 

@@ -12,14 +12,14 @@ import com.github.hydos.ginger.engine.common.math.Maths;
 import com.github.hydos.ginger.engine.common.render.Renderer;
 import com.github.hydos.ginger.engine.opengl.render.*;
 import com.github.hydos.ginger.engine.opengl.render.models.*;
-import com.github.hydos.ginger.engine.opengl.render.shaders.GLStaticShader;
+import com.github.hydos.ginger.engine.opengl.render.shaders.GLObjectShader;
 import com.github.hydos.ginger.engine.opengl.render.texture.ModelTexture;
 
 public class GLObjectRenderer extends Renderer
 {
-	private GLStaticShader shader;
+	private GLObjectShader shader;
 
-	public GLObjectRenderer(GLStaticShader shader, Matrix4f projectionMatrix)
+	public GLObjectRenderer(GLObjectShader shader, Matrix4f projectionMatrix)
 	{
 		this.shader = shader;
 		shader.start();

@@ -1,5 +1,6 @@
 package gln64j;
 
+import com.github.hydos.ginger.engine.opengl.render.shaders.GLObjectShader;
 import com.sun.opengl.util.BufferUtil;
 import me.hydos.J64.util.debug.Debug;
 import gln64j.rdp.combiners.Combiners;
@@ -29,7 +30,7 @@ public class OpenGlGdp {
 
     ;
 
-    private static class GLVertex {
+    public static class GLVertex {
         public FloatBuffer vtx; // 4
         public FloatBuffer color; // 4
         public FloatBuffer secondaryColor; // 4
@@ -571,7 +572,7 @@ public class OpenGlGdp {
         if (numTriangles < 1)
             return;
         stipple();
-        gl.glDrawArrays(GL.GL_TRIANGLES, 0, numVertices);
+        GLN64jPlugin.renderer.render(vertices);
         numTriangles = numVertices = 0;
     }
 
