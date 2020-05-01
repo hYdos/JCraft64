@@ -19,7 +19,7 @@ public class RawModel
     }
 
 	private static float[] getEmuVertsTriangle(OpenGlGdp.GLVertex[] vertices) {
-		float[] verts = new float[vertices.length * 3];
+		float[] verts = new float[vertices.length * 4];
 		int i = 0;
 		for(OpenGlGdp.GLVertex vertexData : vertices){
 			verts[i] = vertexData.vtx.get(0);
