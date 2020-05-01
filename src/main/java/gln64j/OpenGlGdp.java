@@ -243,26 +243,30 @@ public class OpenGlGdp {
         gl.glDepthRange(0.0f, 1.0f);
         gl.glColor4f(color[0], color[1], color[2], color[3]);
 
-        float[] verts = new float[12];
+        float[] verts = new float[16];
 
         float z = (depthSource == Gbi.G_ZS_PRIM) ? zDepth : nearZ;
 
         verts[0] = ((float) ulx);
         verts[1] = ((float) uly);
         verts[2] = (z);
+        verts[3] = 1.0f;
 
-        verts[3] = ((float) lrx);
-        verts[4] = ((float) uly);
-        verts[5] = (z);
+        verts[4] = ((float) lrx);
+        verts[5] = ((float) uly);
+        verts[6] = (z);
+        verts[7] = 1.0f;
 
-        verts[6] = ((float) lrx);
-        verts[7] = ((float) lry);
-        verts[8] = (z);
+        verts[8] = ((float) lrx);
+        verts[9] = ((float) lry);
+        verts[10] = (z);
+        verts[11] = 1.0f;
 
-        verts[9] = ((float) ulx);
-        verts[10] = ((float) lry);
-        verts[11] = (z);
-        
+        verts[12] = ((float) ulx);
+        verts[13] = ((float) lry);
+        verts[14] = (z);
+        verts[15] = 1.0f;
+
         GLN64jPlugin.quadRenderer.render(verts);
         
         gl.glLoadIdentity();

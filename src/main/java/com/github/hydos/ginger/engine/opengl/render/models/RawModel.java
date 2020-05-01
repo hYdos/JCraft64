@@ -15,7 +15,7 @@ public class RawModel
 	}
 
     public static RawModel fromVerts(OpenGlGdp.GLVertex[] vertices) {
-		return GLLoader.loadToVAO(getEmuVertsTriangle(vertices) ,3); //3 = tri's 4= quads
+		return GLLoader.loadToVAO(getEmuVertsTriangle(vertices) ,4); //perspective is currently done in cpu so its 4
     }
 
 	private static float[] getEmuVertsTriangle(OpenGlGdp.GLVertex[] vertices) {
@@ -33,7 +33,7 @@ public class RawModel
 	}
 
     public static RawModel quad(float[] verts) {
-		return GLLoader.loadToVAO(verts, 3);
+		return GLLoader.loadToVAO(verts, 4);
     }
 
     public int getVaoID()
