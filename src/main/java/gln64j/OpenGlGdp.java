@@ -7,6 +7,7 @@ import gln64j.rdp.combiners.Combiners;
 import gln64j.rdp.textures.TextureCache;
 import me.hydos.J64.util.debug.Debug;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
