@@ -1,10 +1,8 @@
 package gln64j;
 
-import com.github.hydos.ginger.engine.common.cameras.Camera;
 import com.github.hydos.ginger.engine.common.cameras.FirstPersonCamera;
-import com.github.hydos.ginger.engine.common.info.RenderAPI;
-import com.github.hydos.ginger.engine.common.io.Window;
-import com.github.hydos.ginger.engine.opengl.render.renderers.GLGLVertexRenderer;
+import com.github.hydos.ginger.engine.opengl.render.renderers.GLGLQuadRenderer;
+import com.github.hydos.ginger.engine.opengl.render.renderers.GLGLTriRenderer;
 import me.hydos.J64.util.debug.Debug;
 import gln64j.rsp.Gsp;
 import gln64j.rdp.Gdp;
@@ -30,7 +28,8 @@ public class GLN64jPlugin implements GfxPlugin {
 
     private final String name;
 
-    public static GLGLVertexRenderer renderer;
+    public static GLGLTriRenderer triRenderer;
+    public static GLGLQuadRenderer quadRenderer;
     public static FirstPersonCamera camera;
 
     public GLN64jPlugin() {

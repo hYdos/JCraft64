@@ -14,7 +14,7 @@ public class RawModel
 		this.vertexCount = vertexCount;
 	}
 
-    public static RawModel createFromEmu(OpenGlGdp.GLVertex[] vertices) {
+    public static RawModel fromVerts(OpenGlGdp.GLVertex[] vertices) {
 		return GLLoader.loadToVAO(getEmuVertsTriangle(vertices) ,3); //3 = tri's 4= quads
     }
 
@@ -32,7 +32,11 @@ public class RawModel
 		return verts;
 	}
 
-	public int getVaoID()
+    public static RawModel quad(float[] verts) {
+		return GLLoader.loadToVAO(verts, 3);
+    }
+
+    public int getVaoID()
 	{ return vaoID; }
 
 	public int getVertexCount()

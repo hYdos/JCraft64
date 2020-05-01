@@ -135,7 +135,7 @@ public class Gsp {
     private int nextCmd;
     private boolean halt;
     private int[] segment = new int[16];
-    private Matrix matrix = new Matrix();
+    public Matrix matrix = new Matrix();
     private int vertexi;
     private Light[] lights = new Light[12];
     private SPVertex[] vertices = new SPVertex[80];

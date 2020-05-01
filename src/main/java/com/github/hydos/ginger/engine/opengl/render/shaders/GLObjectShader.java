@@ -20,6 +20,7 @@ public class GLObjectShader extends ShaderProgram {
     private int location_reflectivity;
     private int location_useFakeLighting;
     private int location_skyColour;
+    private int location_colour;
 
     public GLObjectShader() {
         super("entityVertexShader.glsl", "entityFragmentShader.glsl");
@@ -29,7 +30,6 @@ public class GLObjectShader extends ShaderProgram {
     protected void bindAttributes() {
         super.bindAttribute(0, "position");
         super.bindAttribute(1, "textureCoords");
-        super.bindAttribute(2, "normal");
     }
 
     @Override
@@ -41,6 +41,7 @@ public class GLObjectShader extends ShaderProgram {
         location_reflectivity = super.getUniformLocation("reflectivity");
         location_useFakeLighting = super.getUniformLocation("useFakeLighting");
         location_skyColour = super.getUniformLocation("skyColour");
+        location_colour = super.getUniformLocation("colour");
         location_lightPosition = new int[MAX_LIGHTS];
         location_lightColour = new int[MAX_LIGHTS];
         location_attenuation = new int[MAX_LIGHTS];
@@ -89,5 +90,9 @@ public class GLObjectShader extends ShaderProgram {
     public void loadViewMatrix(Camera camera) {
         Matrix4f matrix = Maths.createViewMatrix(camera);
         super.loadMatrix(location_viewMatrix, matrix);
+    }
+
+    public void loadColour(Vector3f colour){
+        super.loadVector(location_colour, colour);
     }
 }

@@ -204,11 +204,9 @@ public class Window
 	public static void swapBuffers()
 	{ GLFW.glfwSwapBuffers(getWindow()); }
 
-	public static void unlockMouse()
-	{ GLFW.glfwSetInputMode(getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL); }
-
 	public static void update()
 	{
+		GLFW.glfwMakeContextCurrent(getWindow());
 		if(renderAPI == RenderAPI.OpenGL) {
 			if ((oldWindowHeight != Window.getHeight() || oldWindowWidth != Window.getWidth()) && Window.getHeight() > 10 && Window.getWidth() > 10)
 			{

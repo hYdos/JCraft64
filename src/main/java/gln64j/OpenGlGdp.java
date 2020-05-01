@@ -1,76 +1,25 @@
 package gln64j;
 
-import com.github.hydos.ginger.engine.opengl.render.shaders.GLObjectShader;
+import com.github.hydos.ginger.engine.common.io.Window;
 import com.sun.opengl.util.BufferUtil;
-import me.hydos.J64.util.debug.Debug;
-import gln64j.rdp.combiners.Combiners;
 import gln64j.rdp.Gdp;
+import gln64j.rdp.combiners.Combiners;
 import gln64j.rdp.textures.TextureCache;
+import me.hydos.J64.util.debug.Debug;
+import org.lwjgl.glfw.GLFW;
 
-import java.nio.FloatBuffer;
-import java.util.Random;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
+import java.nio.FloatBuffer;
+import java.util.Random;
 
 public class OpenGlGdp {
 
     private static final int SIZEOF_FLOAT = 4;
     private static final int SIZEOF_GLVERTEX = 17 * SIZEOF_FLOAT;
+    private static final GLSimpleVertex rect0 = new GLSimpleVertex();
 
-    private static class GLSimpleVertex {
-        public float x, y, z, w;
-
-        public float[] color = new float[4]; // r,g,b,a
-        public float[] secondaryColor = new float[4]; // r,g,b,a
-
-        public float s0, t0, s1, t1;
-
-        public float fog;
-    }
-
-    ;
-
-    public static class GLVertex {
-        public FloatBuffer vtx; // 4
-        public FloatBuffer color; // 4
-        public FloatBuffer secondaryColor; // 4
-        public FloatBuffer tex0; // 2
-        public FloatBuffer tex1; // 2
-        public FloatBuffer fog; // 1
-
-        public GLVertex() {
-        }
-
-        public GLVertex(float x, float y, float z, float w,
-                        float r1, float g1, float b1, float a1,
-                        float r2, float g2, float b2, float a2,
-                        float s0, float t0, float s1, float t1, float f) {
-            vtx = FloatBuffer.allocate(4);
-            vtx.put(x);
-            vtx.put(y);
-            vtx.put(z);
-            vtx.put(w);
-            color = FloatBuffer.allocate(4);
-            color.put(r1);
-            color.put(g1);
-            color.put(b1);
-            color.put(a1);
-            secondaryColor = FloatBuffer.allocate(4);
-            secondaryColor.put(r2);
-            secondaryColor.put(g2);
-            secondaryColor.put(b2);
-            secondaryColor.put(a2);
-            tex0 = FloatBuffer.allocate(2);
-            tex0.put(s0);
-            tex0.put(t0);
-            tex1 = FloatBuffer.allocate(2);
-            tex1.put(s1);
-            tex1.put(t1);
-            fog = FloatBuffer.allocate(1);
-            fog.put(f);
-        }
-    }
-
+    private static final GLSimpleVertex rect1 = new GLSimpleVertex();
     public static GL gl;
 
     public static TextureCache cache = new TextureCache();
@@ -81,7 +30,7 @@ public class OpenGlGdp {
     public static GLAutoDrawable hDC;
 
     private static int numTriangles;
-    private static GLVertex[] vertices = new GLVertex[256];
+    private static final GLVertex[] vertices = new GLVertex[256];
     private static FloatBuffer bigArray;
     private static float scaleX;
     private static float scaleY;
@@ -94,10 +43,8 @@ public class OpenGlGdp {
     private static int height;
     private static int heightOffset;
     private static boolean usePolygonStipple;
-    private static byte[][][] stipplePattern = new byte[32][8][128];
+    private static final byte[][][] stipplePattern = new byte[32][8][128];
     private static int lastStipple;
-    private static final GLSimpleVertex rect0 = new GLSimpleVertex();
-    private static final GLSimpleVertex rect1 = new GLSimpleVertex();
     private static int windowedWidth;
     private static int windowedHeight;
 
@@ -263,6 +210,7 @@ public class OpenGlGdp {
     }
 
     public static void OGL_ClearDepthBuffer(boolean depthUpdate) {
+        GLFW.glfwMakeContextCurrent(Window.getWindow());
         OpenGl.OGL_GspUpdateStates();
 
         OGL_GdpUpdateStates();
@@ -272,6 +220,7 @@ public class OpenGlGdp {
     }
 
     public static void OGL_ClearColorBuffer(float[] color) {
+        GLFW.glfwMakeContextCurrent(Window.getWindow());
         gl.glClearColor(color[0], color[1], color[2], color[3]);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
     }
@@ -289,17 +238,32 @@ public class OpenGlGdp {
         gl.glOrtho(0, screenWidth, screenHeight, 0, 1.0f, -1.0f);
         gl.glViewport(0, heightOffset, width, height);
         if (Debug.WIREFRAME)
-            gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE); //TMP
+            gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
         gl.glDepthRange(0.0f, 1.0f);
         gl.glColor4f(color[0], color[1], color[2], color[3]);
 
-        gl.glBegin(GL.GL_QUADS);
-        gl.glVertex4f(ulx, uly, (depthSource == Gbi.G_ZS_PRIM) ? zDepth : nearZ, 1.0f);
-        gl.glVertex4f(lrx, uly, (depthSource == Gbi.G_ZS_PRIM) ? zDepth : nearZ, 1.0f);
-        gl.glVertex4f(lrx, lry, (depthSource == Gbi.G_ZS_PRIM) ? zDepth : nearZ, 1.0f);
-        gl.glVertex4f(ulx, lry, (depthSource == Gbi.G_ZS_PRIM) ? zDepth : nearZ, 1.0f);
-        gl.glEnd();
+        float[] verts = new float[12];
 
+        float z = (depthSource == Gbi.G_ZS_PRIM) ? zDepth : nearZ;
+
+        verts[0] = ((float) ulx);
+        verts[1] = ((float) uly);
+        verts[2] = (z);
+
+        verts[3] = ((float) lrx);
+        verts[4] = ((float) uly);
+        verts[5] = (z);
+
+        verts[6] = ((float) lrx);
+        verts[7] = ((float) lry);
+        verts[8] = (z);
+
+        verts[9] = ((float) ulx);
+        verts[10] = ((float) lry);
+        verts[11] = (z);
+        
+        GLN64jPlugin.quadRenderer.render(verts);
+        
         gl.glLoadIdentity();
 
         if (culling)
@@ -572,7 +536,7 @@ public class OpenGlGdp {
         if (numTriangles < 1)
             return;
         stipple();
-        GLN64jPlugin.renderer.render(vertices);
+        GLN64jPlugin.triRenderer.render(vertices);
         numTriangles = numVertices = 0;
     }
 
@@ -602,8 +566,7 @@ public class OpenGlGdp {
                 gl.glEnable(GL.GL_ALPHA_TEST);
 
                 gl.glAlphaFunc((Rsp.gdp.blendColor[3] > 0.0f) ? GL.GL_GEQUAL : GL.GL_GREATER, Rsp.gdp.blendColor[3]);
-            }
-            else if (Gdp.RDP_GETOM_CVG_TIMES_ALPHA(Rsp.gdp.otherMode) != 0) {
+            } else if (Gdp.RDP_GETOM_CVG_TIMES_ALPHA(Rsp.gdp.otherMode) != 0) {
                 gl.glEnable(GL.GL_ALPHA_TEST);
 
                 gl.glAlphaFunc(GL.GL_GEQUAL, 0.5f);
@@ -699,6 +662,58 @@ public class OpenGlGdp {
         cache.changed &= TextureCache.CHANGED_TMEM;
         Rsp.gdp.changed &= Gdp.CHANGED_TILE;
         Rsp.gdp.changed &= Gdp.CHANGED_TEXTURE;
+    }
+
+    private static class GLSimpleVertex {
+        public float x, y, z, w;
+
+        public float[] color = new float[4]; // r,g,b,a
+        public float[] secondaryColor = new float[4]; // r,g,b,a
+
+        public float s0, t0, s1, t1;
+
+        public float fog;
+    }
+
+    public static class GLVertex {
+        public FloatBuffer vtx; // 4
+        public FloatBuffer color; // 4
+        public FloatBuffer secondaryColor; // 4
+        public FloatBuffer tex0; // 2
+        public FloatBuffer tex1; // 2
+        public FloatBuffer fog; // 1
+
+        public GLVertex() {
+        }
+
+        public GLVertex(float x, float y, float z, float w,
+                        float r1, float g1, float b1, float a1,
+                        float r2, float g2, float b2, float a2,
+                        float s0, float t0, float s1, float t1, float f) {
+            vtx = FloatBuffer.allocate(4);
+            vtx.put(x);
+            vtx.put(y);
+            vtx.put(z);
+            vtx.put(w);
+            color = FloatBuffer.allocate(4);
+            color.put(r1);
+            color.put(g1);
+            color.put(b1);
+            color.put(a1);
+            secondaryColor = FloatBuffer.allocate(4);
+            secondaryColor.put(r2);
+            secondaryColor.put(g2);
+            secondaryColor.put(b2);
+            secondaryColor.put(a2);
+            tex0 = FloatBuffer.allocate(2);
+            tex0.put(s0);
+            tex0.put(t0);
+            tex1 = FloatBuffer.allocate(2);
+            tex1.put(s1);
+            tex1.put(t1);
+            fog = FloatBuffer.allocate(1);
+            fog.put(f);
+        }
     }
 
 }

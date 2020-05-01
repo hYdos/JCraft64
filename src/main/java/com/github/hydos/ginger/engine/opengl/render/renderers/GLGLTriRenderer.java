@@ -14,11 +14,11 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-public class GLGLVertexRenderer extends Renderer {
+public class GLGLTriRenderer extends Renderer {
 
     private final GLObjectShader shader;
 
-    public GLGLVertexRenderer(GLObjectShader shader, Matrix4f projectionMatrix) {
+    public GLGLTriRenderer(GLObjectShader shader, Matrix4f projectionMatrix) {
         this.shader = shader;
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
@@ -35,12 +35,12 @@ public class GLGLVertexRenderer extends Renderer {
     }
 
     private RawModel prepareVerts(OpenGlGdp.GLVertex[] vertices) {
-        RawModel rawModel = RawModel.createFromEmu(vertices);
+        RawModel rawModel = RawModel.fromVerts(vertices);
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
-        GLRenderManager.enableCulling();
         shader.loadFakeLightingVariable(true);
         shader.loadShine(1, 1);
+        shader.loadColour(new Vector3f(0.6f, 0.4f, 0.4f));
         return rawModel;
     }
 

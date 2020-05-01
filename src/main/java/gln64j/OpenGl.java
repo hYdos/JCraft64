@@ -1,17 +1,16 @@
 package gln64j;
 
-import com.github.hydos.ginger.engine.common.api.GingerEngine;
-import com.github.hydos.ginger.engine.common.cameras.Camera;
 import com.github.hydos.ginger.engine.common.cameras.FirstPersonCamera;
 import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.opengl.api.GingerGL;
 import com.github.hydos.ginger.engine.opengl.render.GLRenderManager;
-import com.github.hydos.ginger.engine.opengl.render.renderers.GLGLVertexRenderer;
+import com.github.hydos.ginger.engine.opengl.render.renderers.GLGLQuadRenderer;
+import com.github.hydos.ginger.engine.opengl.render.renderers.GLGLTriRenderer;
 import com.github.hydos.ginger.engine.opengl.render.shaders.GLObjectShader;
 import com.github.hydos.ginger.engine.opengl.utils.GLUtils;
 import gln64j.rsp.Gsp;
-import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
+import org.joml.Matrix4f;
 
 import java.nio.FloatBuffer;
 import javax.swing.JFrame;
@@ -67,9 +66,12 @@ public class OpenGl {
         public void init(GLAutoDrawable gLDrawable) {
             gl = gLDrawable.getGL();
             OpenGlGdp.init(gl);
-            Window.create(1020, 860, "Ginger Video plugin", 60, RenderAPI.OpenGL);
+            Window.create(640, 480, "Ginger Video plugin", 60, RenderAPI.OpenGL);
             GLUtils.init();
-            GLN64jPlugin.renderer = new GLGLVertexRenderer(new GLObjectShader(), GLRenderManager.createProjectionMatrix());
+            GLObjectShader shader = new GLObjectShader();
+            Matrix4f projectionMatrix = GLRenderManager.createProjectionMatrix();
+            GLN64jPlugin.triRenderer = new GLGLTriRenderer(shader, projectionMatrix);
+            GLN64jPlugin.quadRenderer = new GLGLQuadRenderer(shader, projectionMatrix);
             GLN64jPlugin.camera = new FirstPersonCamera();
             GingerGL gingerGL = new GingerGL();
             gingerGL.setup(new GingerHandler());

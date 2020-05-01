@@ -5,19 +5,17 @@ import java.util.*;
 import com.github.hydos.ginger.engine.common.info.RenderAPI;
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.github.hydos.ginger.engine.opengl.api.GingerGL;
-import com.github.hydos.ginger.engine.opengl.render.renderers.GLFontRenderer;
 import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
 
 public class TextMaster
 {
 	private static Map<FontType, List<GUIText>> texts = new HashMap<FontType, List<GUIText>>();
-	private static GLFontRenderer renderer;
 
 	public static void cleanUp()
-	{ renderer.cleanUp(); }
+	{}
 
 	public static void init()
-	{ renderer = new GLFontRenderer(); }
+	{}
 
 	public static void loadText(GUIText text)
 	{
@@ -25,12 +23,7 @@ public class TextMaster
 		TextMeshData data = font.loadText(text);
 		int vao = GLLoader.loadToVAO(data.getVertexPositions(), data.getTextureCoords());
 		text.setMeshInfo(vao, data.getVertexCount());
-		List<GUIText> textBatch = texts.get(font);
-		if (textBatch == null)
-		{
-			textBatch = new ArrayList<GUIText>();
-			texts.put(font, textBatch);
-		}
+		List<GUIText> textBatch = texts.computeIfAbsent(font, k -> new ArrayList<GUIText>());
 		textBatch.add(text);
 	}
 
@@ -43,7 +36,7 @@ public class TextMaster
 	}
 
 	public static void render()
-	{ renderer.render(texts); }
+	{}
 
 	public static void render(GUIText buildText)
 	{
