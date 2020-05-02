@@ -37,6 +37,7 @@ public class GLGLTriRenderer extends Renderer {
     private RawModel prepareVerts(OpenGlGdp.GLVertex[] vertices) {
         RawModel rawModel = RawModel.fromVerts(vertices);
         GL30.glBindVertexArray(rawModel.getVaoID());
+
         GL20.glEnableVertexAttribArray(0);
         shader.loadFakeLightingVariable(true);
         shader.loadShine(1, 1);

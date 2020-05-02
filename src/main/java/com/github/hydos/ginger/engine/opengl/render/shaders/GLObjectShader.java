@@ -9,13 +9,9 @@ import org.joml.Vector3f;
 import java.util.List;
 
 public class GLObjectShader extends ShaderProgram {
-    private static final int MAX_LIGHTS = 5;
     private int location_transformationMatrix;
     private int location_projectionMatrix;
     private int location_viewMatrix;
-    private int[] location_lightColour;
-    private int[] location_lightPosition;
-    private int[] location_attenuation;
     private int location_shineDamper;
     private int location_reflectivity;
     private int location_useFakeLighting;
@@ -42,32 +38,10 @@ public class GLObjectShader extends ShaderProgram {
         location_useFakeLighting = super.getUniformLocation("useFakeLighting");
         location_skyColour = super.getUniformLocation("skyColour");
         location_colour = super.getUniformLocation("colour");
-        location_lightPosition = new int[MAX_LIGHTS];
-        location_lightColour = new int[MAX_LIGHTS];
-        location_attenuation = new int[MAX_LIGHTS];
-        for (int i = 0; i < MAX_LIGHTS; i++) {
-            location_lightPosition[i] = super.getUniformLocation("lightPosition[" + i + "]");
-            location_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
-            location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
-        }
     }
 
     public void loadFakeLightingVariable(boolean useFake) {
         super.loadBoolean(location_useFakeLighting, useFake);
-    }
-
-    public void loadLights(List<Light> lights) {
-        for (int i = 0; i < MAX_LIGHTS; i++) {
-            if (i < lights.size()) {
-                super.loadVector(location_lightPosition[i], lights.get(i).getPosition());
-                super.loadVector(location_lightColour[i], lights.get(i).getColour());
-                super.loadVector(location_attenuation[i], lights.get(i).getAttenuation());
-            } else {
-                super.loadVector(location_lightPosition[i], new Vector3f(0, 0, 0));
-                super.loadVector(location_lightColour[i], new Vector3f(0, 0, 0));
-                super.loadVector(location_attenuation[i], new Vector3f(1, 0, 0));
-            }
-        }
     }
 
     public void loadProjectionMatrix(Matrix4f matrix) {

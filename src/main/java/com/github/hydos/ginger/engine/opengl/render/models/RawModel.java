@@ -28,6 +28,8 @@ public class RawModel
 			i++;
 			verts[i] = vertexData.vtx.get(2);
 			i++;
+			verts[i] = vertexData.vtx.get(3);
+			i++;
 		}
 		return verts;
 	}
