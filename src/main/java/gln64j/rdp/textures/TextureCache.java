@@ -252,8 +252,7 @@ public class TextureCache {
     }
 
     public void activateDummy(int t) {
-        if (ARB_multitexture)
-            gl.glActiveTexture(GL.GL_TEXTURE0 + t);
+        gl.glActiveTexture(GL.GL_TEXTURE0 + t);
         gl.glBindTexture(GL.GL_TEXTURE_2D, dummy.glName[0]);
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
@@ -464,7 +463,7 @@ public class TextureCache {
         }
     }
 
-    private void activateTexture(int t, CachedTexture texture, boolean linear) {
+    public void activateTexture(int t, CachedTexture texture, boolean linear) {
         if (ARB_multitexture)
             gl.glActiveTexture(GL.GL_TEXTURE0 + t);
         gl.glBindTexture(GL.GL_TEXTURE_2D, texture.glName[0]);

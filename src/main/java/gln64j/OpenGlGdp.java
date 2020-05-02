@@ -32,7 +32,6 @@ public class OpenGlGdp {
 
     private static int numTriangles;
     private static final GLVertex[] vertices = new GLVertex[256];
-    private static FloatBuffer bigArray;
     private static float scaleX;
     private static float scaleY;
     private static float zDepth;
@@ -54,7 +53,7 @@ public class OpenGlGdp {
 
         for (int i = 0; i < 256; i++)
             vertices[i] = new GLVertex();
-        bigArray = BufferUtil.newFloatBuffer(256 * 17);
+        FloatBuffer bigArray = BufferUtil.newFloatBuffer(256 * 17);
         for (int i = 0; i < 256; i++) {
             bigArray.position(i * 17);
             vertices[i].vtx = bigArray.slice();

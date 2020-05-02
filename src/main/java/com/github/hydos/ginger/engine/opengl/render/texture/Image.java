@@ -29,6 +29,7 @@ public class Image
 			IntBuffer w = stack.mallocInt(1);
 			IntBuffer h = stack.mallocInt(1);
 			IntBuffer comp = stack.mallocInt(1);
+			assert imageBuffer != null;
 			if (!stbi_info_from_memory(imageBuffer, w, h, comp))
 			{ throw new RuntimeException("Failed to read image information: " + stbi_failure_reason()); }
 			img = stbi_load_from_memory(imageBuffer, w, h, comp, 0);
