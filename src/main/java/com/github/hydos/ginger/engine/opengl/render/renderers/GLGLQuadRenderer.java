@@ -21,7 +21,6 @@ public class GLGLQuadRenderer extends Renderer {
     public GLGLQuadRenderer(GLObjectShader shader, Matrix4f projectionMatrix) {
         this.shader = shader;
         shader.start();
-        shader.loadProjectionMatrix(projectionMatrix);
         shader.stop();
     }
 
@@ -31,15 +30,12 @@ public class GLGLQuadRenderer extends Renderer {
 
     private void prepareInstance() {
         Matrix4f transformationMatrix = Maths.createTransformationMatrix(new Vector3f(0, 0, 0), 0, 0, 0, new Vector3f(1, 1, 1));
-        shader.loadTransformationMatrix(transformationMatrix);
     }
 
     private RawModel prepQuad(float[] verts) {
         RawModel rawModel = RawModel.quad(verts);
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
-        shader.loadFakeLightingVariable(true);
-        shader.loadShine(1, 1);
         Random r = new Random();
         return rawModel;
     }
@@ -52,8 +48,6 @@ public class GLGLQuadRenderer extends Renderer {
     public void render(float[] verts) {
         prepare();
         shader.start();
-        shader.loadSkyColour(Window.getColour());
-        shader.loadViewMatrix(GLN64jPlugin.camera);
         prepareInstance();
         RawModel model = prepQuad(verts);
 

@@ -147,6 +147,15 @@ public class GLLoader
 		return new RawModel(vaoID, positions.length / dimensions);
 	}
 
+	public static RawModel loadEmuVertsToVAO(float[] positions, float[] texCoords)
+	{
+		int vaoID = createVAO();
+		storeDataInAttributeList(0, 4, positions);
+		storeDataInAttributeList(1, 2, texCoords);
+		unbindVAO();
+		return new RawModel(vaoID, positions.length / 4);
+	}
+
 	public static RawModel loadToVAO(float[] positions, int[] indices, float[] normals, float[] textureCoords)
 	{
 		int vaoID = createVAO();

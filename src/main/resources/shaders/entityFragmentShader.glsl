@@ -1,10 +1,6 @@
 #version 140
 
 in vec2 pass_textureCoords;
-in vec3 surfaceNormal;
-in vec3 toLightVector[5];
-in vec3 toCameraVector;
-in float visibility;
 
 out vec4 out_Color;
 
@@ -17,6 +13,9 @@ uniform vec3 skyColour;
 uniform vec3 colour;
 
 void main(void){
-	vec4 textureColour = texture(textureSampler, pass_textureCoords);
-	out_Color = textureColour;
+	vec4 colour = texture(textureSampler, pass_textureCoords);
+	if(colour.a < 0.5){
+		discard;
+	}
+	out_Color = colour;
 }

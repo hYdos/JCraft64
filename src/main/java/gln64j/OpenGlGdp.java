@@ -71,7 +71,7 @@ public class OpenGlGdp {
         }
 
         if (Debug.DEBUG_OGL) System.out.println("GL_NV_register_combiners: " + Combiners.NV_register_combiners);
-        Combiners.ARB_multitexture = gl.glGetString(GL.GL_EXTENSIONS).contains("GL_ARB_multitexture");
+        Combiners.ARB_multitexture = true;
         if (Debug.DEBUG_OGL) System.out.println("GL_ARB_multitexture: " + Combiners.ARB_multitexture);
         if (Combiners.ARB_multitexture) {
             int[] maxTextureUnits_t = new int[1];

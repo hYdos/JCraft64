@@ -70,7 +70,7 @@ public class OpenGl {
             GLUtils.init();
             GLObjectShader shader = new GLObjectShader();
             Matrix4f projectionMatrix = GLRenderManager.createProjectionMatrix();
-            GLN64jPlugin.triRenderer = new GLGLTriRenderer(shader, projectionMatrix);
+            GLN64jPlugin.triRenderer = new GLGLTriRenderer(shader);
             GLN64jPlugin.quadRenderer = new GLGLQuadRenderer(shader, projectionMatrix);
             GLN64jPlugin.camera = new FirstPersonCamera();
             GingerGL gingerGL = new GingerGL();
@@ -125,9 +125,6 @@ public class OpenGl {
 
     private static boolean fog;
 
-    /** Creates a new instance of OpenGl */
-    private OpenGl() {
-    }
     
     public static void config() {
         fog = false; //TODO: add this if fog is on program?

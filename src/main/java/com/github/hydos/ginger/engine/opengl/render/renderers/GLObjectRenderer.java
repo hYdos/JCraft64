@@ -23,7 +23,6 @@ public class GLObjectRenderer extends Renderer
 	{
 		this.shader = shader;
 		shader.start();
-		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 	}
 
@@ -33,7 +32,6 @@ public class GLObjectRenderer extends Renderer
 	private void prepareInstance(GLRenderObject entity)
 	{
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale());
-		shader.loadTransformationMatrix(transformationMatrix);
 	}
 
 	private void prepareTexturedModel(GLTexturedModel model)
@@ -52,8 +50,6 @@ public class GLObjectRenderer extends Renderer
 		{
 			GLRenderManager.enableCulling();
 		}
-		shader.loadFakeLightingVariable(texture.isUseFakeLighting());
-		shader.loadShine(texture.getShineDamper(), texture.getReflectivity());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
 	}
@@ -88,8 +84,6 @@ public class GLObjectRenderer extends Renderer
 	{
 		prepare();
 		shader.start();
-		shader.loadSkyColour(Window.getColour());
-		shader.loadViewMatrix(GingerRegister.getInstance().game.data.camera);
 		for (GLRenderObject entity : renderList)
 		{
 			if (entity != null && entity.getModel() != null)

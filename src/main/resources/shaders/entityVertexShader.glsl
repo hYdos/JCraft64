@@ -3,7 +3,6 @@
 
 in vec4 position;
 in vec2 textureCoords;
-in vec3 normal;
 
 out vec2 pass_textureCoords;
 out vec3 surfaceNormal;
@@ -24,7 +23,7 @@ const float density = 0.0025;
 const float gradient = 10.0;
 
 void main(void){
-
+	pass_textureCoords = textureCoords;
 	gl_Position = position;
 
 

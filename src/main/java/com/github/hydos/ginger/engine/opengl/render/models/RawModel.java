@@ -2,6 +2,7 @@ package com.github.hydos.ginger.engine.opengl.render.models;
 
 import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
 import gln64j.OpenGlGdp;
+import org.joml.Vector2f;
 
 public class RawModel
 {
@@ -15,10 +16,16 @@ public class RawModel
 	}
 
     public static RawModel fromVerts(OpenGlGdp.GLVertex[] vertices) {
-		return GLLoader.loadToVAO(getEmuVertsTriangle(vertices) ,4); //perspective is currently done in cpu so its 4
+		float[][] data = processEmuVerts(vertices);
+		return GLLoader.loadEmuVertsToVAO(data[0], data[1]);
     }
 
-	private static float[] getEmuVertsTriangle(OpenGlGdp.GLVertex[] vertices) {
+	private static float[][] processEmuVerts(OpenGlGdp.GLVertex[] vertices) {
+		float[][] meshData = new float[2][];
+		// 0 = position
+		// 1 = tex coords
+		// 2 = im not sure yet
+
 		float[] verts = new float[vertices.length * 4];
 		int i = 0;
 		for(OpenGlGdp.GLVertex vertexData : vertices){
@@ -31,7 +38,24 @@ public class RawModel
 			verts[i] = vertexData.vtx.get(3);
 			i++;
 		}
-		return verts;
+
+		float[] texCoords = new float[vertices.length * 2];
+		i = 0;
+		for(OpenGlGdp.GLVertex vertexData : vertices){
+			texCoords[i] = vertexData.tex0.get(0);
+			i++;
+			texCoords[i] = vertexData.tex0.get(1);
+			i++;
+
+//			texCoords[i] = vertexData.tex1.get(0);
+//			i++;
+//			texCoords[i] = vertexData.tex1.get(1);
+//			i++;
+		}
+
+		meshData[0] = verts;
+		meshData[1] = texCoords;
+		return meshData;
 	}
 
     public static RawModel quad(float[] verts) {
