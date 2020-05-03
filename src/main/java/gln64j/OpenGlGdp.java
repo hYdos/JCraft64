@@ -7,7 +7,6 @@ import gln64j.rdp.combiners.Combiners;
 import gln64j.rdp.textures.TextureCache;
 import me.hydos.J64.util.debug.Debug;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
@@ -32,7 +31,6 @@ public class OpenGlGdp {
 
     private static int numTriangles;
     private static final GLVertex[] vertices = new GLVertex[256];
-    private static FloatBuffer bigArray;
     private static float scaleX;
     private static float scaleY;
     private static float zDepth;
@@ -54,7 +52,7 @@ public class OpenGlGdp {
 
         for (int i = 0; i < 256; i++)
             vertices[i] = new GLVertex();
-        bigArray = BufferUtil.newFloatBuffer(256 * 17);
+        FloatBuffer bigArray = BufferUtil.newFloatBuffer(256 * 17);
         for (int i = 0; i < 256; i++) {
             bigArray.position(i * 17);
             vertices[i].vtx = bigArray.slice();
@@ -73,11 +71,9 @@ public class OpenGlGdp {
         if (Debug.DEBUG_OGL) System.out.println("GL_NV_register_combiners: " + Combiners.NV_register_combiners);
         Combiners.ARB_multitexture = true;
         if (Debug.DEBUG_OGL) System.out.println("GL_ARB_multitexture: " + Combiners.ARB_multitexture);
-        if (Combiners.ARB_multitexture) {
-            int[] maxTextureUnits_t = new int[1];
-            gl.glGetIntegerv(GL.GL_MAX_TEXTURE_UNITS, maxTextureUnits_t, 0);
-            Combiners.maxTextureUnits = StrictMath.min(8, maxTextureUnits_t[0]); // The plugin only supports 8, and 4 is really enough
-        }
+        int[] maxTextureUnits_t = new int[1];
+        gl.glGetIntegerv(GL.GL_MAX_TEXTURE_UNITS, maxTextureUnits_t, 0);
+        Combiners.maxTextureUnits = StrictMath.min(8, maxTextureUnits_t[0]); // The plugin only supports 8, and 4 is really enough
         Combiners.EXT_fog_coord = gl.glGetString(GL.GL_EXTENSIONS).contains("GL_EXT_fog_coord");
         if (Debug.DEBUG_OGL) System.out.println("GL_EXT_fog_coord: " + Combiners.EXT_fog_coord);
         Combiners.EXT_secondary_color = gl.glGetString(GL.GL_EXTENSIONS).contains("GL_EXT_secondary_color");

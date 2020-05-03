@@ -1,21 +1,22 @@
 #version 140
 
 in vec2 pass_textureCoords;
+in vec4 pass_colour;
 
 out vec4 out_Color;
 
 uniform sampler2D textureSampler;
-uniform vec3 lightColour[5];
-uniform vec3 attenuation[5];
-uniform float shineDamper;
-uniform float reflectivity;
-uniform vec3 skyColour;
-uniform vec3 colour;
 
 void main(void){
-	vec4 colour = texture(textureSampler, pass_textureCoords);
-	if(colour.a < 0.5){
+	vec4 textureColour = texture(textureSampler, pass_textureCoords);
+	if(textureColour.a == 0){
 		discard;
 	}
-	out_Color = colour;
+
+	if(textureColour.r == 0, textureColour.b == 0, textureColour.g == 0){
+		out_Color = pass_colour;
+	}else{
+		out_Color = textureColour;
+	}
+
 }
