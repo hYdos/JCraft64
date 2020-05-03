@@ -2,7 +2,7 @@ package gln64j;
 
 import com.github.hydos.ginger.engine.common.io.Window;
 import com.sun.opengl.util.BufferUtil;
-import gln64j.rdp.Gdp;
+import gln64j.rdp.GraphicsDisplayProcessor;
 import gln64j.rdp.combiners.Combiners;
 import gln64j.rdp.textures.TextureCache;
 import me.hydos.J64.util.debug.Debug;
@@ -189,9 +189,9 @@ public class OpenGlGdp {
     }
 
     public static void viUpdateScreen() {
-        if ((Rsp.gdp.changed & Gdp.CHANGED_COLORBUFFER) != 0) {
+        if ((RealitySignalProcessor.graphicsDisplayProcessor.changed & GraphicsDisplayProcessor.CHANGED_COLORBUFFER) != 0) {
             hDC.swapBuffers();
-            Rsp.gdp.changed &= ~Gdp.CHANGED_COLORBUFFER;
+            RealitySignalProcessor.graphicsDisplayProcessor.changed &= ~GraphicsDisplayProcessor.CHANGED_COLORBUFFER;
         }
     }
 
@@ -199,7 +199,7 @@ public class OpenGlGdp {
         vTrans = trans;
         vScale = scale;
         nearZ = trans - scale;
-        Rsp.gdp.changed |= Gdp.CHANGED_VIEWPORT;
+        RealitySignalProcessor.graphicsDisplayProcessor.changed |= GraphicsDisplayProcessor.CHANGED_VIEWPORT;
     }
 
     public static void setZDepth(int z) {
@@ -446,7 +446,7 @@ public class OpenGlGdp {
     }
 
     public static void OGL_DrawLine(float[] vtx1, float[] c1, float[] vtx2, float[] c2, float width) {
-        if (Rsp.gsp.changed != 0 || Rsp.gdp.changed != 0) {
+        if (RealitySignalProcessor.gsp.changed != 0 || RealitySignalProcessor.graphicsDisplayProcessor.changed != 0) {
             OpenGl.OGL_GspUpdateStates();
             OGL_GdpUpdateStates();
         }
@@ -484,7 +484,7 @@ public class OpenGlGdp {
     }
 
     public static void OGL_AddTriangle(float[] vtx1, float[] c1, float[] tex1, float[] vtx2, float[] c2, float[] tex2, float[] vtx3, float[] c3, float[] tex3) {
-        if (Rsp.gsp.changed != 0 || Rsp.gdp.changed != 0) {
+        if (RealitySignalProcessor.gsp.changed != 0 || RealitySignalProcessor.graphicsDisplayProcessor.changed != 0) {
             OpenGl.OGL_GspUpdateStates();
             OGL_GdpUpdateStates();
         }
@@ -499,7 +499,7 @@ public class OpenGlGdp {
             GLVertex vertex = vertices[numVertices];
             vertex.vtx.put(0, spvert[VTX][0]);
             vertex.vtx.put(1, spvert[VTX][1]);
-            vertex.vtx.put(2, Gdp.RDP_GETOM_Z_SOURCE_SEL(Rsp.gdp.otherMode) == Gbi.G_ZS_PRIM ? zDepth * spvert[VTX][3] : spvert[VTX][2]);
+            vertex.vtx.put(2, GraphicsDisplayProcessor.RDP_GETOM_Z_SOURCE_SEL(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == Gbi.G_ZS_PRIM ? zDepth * spvert[VTX][3] : spvert[VTX][2]);
             vertex.vtx.put(3, spvert[VTX][3]);
 
             vertex.color.put(0, spvert[CLR][0]);
@@ -542,32 +542,32 @@ public class OpenGlGdp {
     }
 
     private static void stipple() {
-        if (usePolygonStipple && (Gdp.RDP_GETOM_ALPHA_COMPARE_EN(Rsp.gdp.otherMode) == Gbi.G_AC_DITHER) && (Gdp.RDP_GETOM_ALPHA_CVG_SELECT(Rsp.gdp.otherMode) == 0)) {
+        if (usePolygonStipple && (GraphicsDisplayProcessor.RDP_GETOM_ALPHA_COMPARE_EN(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == Gbi.G_AC_DITHER) && (GraphicsDisplayProcessor.RDP_GETOM_ALPHA_CVG_SELECT(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == 0)) {
             lastStipple = (lastStipple + 1) & 0x7;
             gl.glPolygonStipple(stipplePattern[(int) (Combiners.envColor[3] * 255.0f) >> 3][lastStipple], 0);
         }
     }
 
     private static void OGL_GdpUpdateStates() {
-        if ((Rsp.gdp.changed & Gdp.CHANGED_RENDERMODE) != 0) {
-            if (Gdp.RDP_GETOM_Z_COMPARE_EN(Rsp.gdp.otherMode) != 0)
+        if ((RealitySignalProcessor.graphicsDisplayProcessor.changed & GraphicsDisplayProcessor.CHANGED_RENDERMODE) != 0) {
+            if (GraphicsDisplayProcessor.RDP_GETOM_Z_COMPARE_EN(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) != 0)
                 gl.glDepthFunc(GL.GL_LEQUAL);
             else
                 gl.glDepthFunc(GL.GL_ALWAYS);
-            gl.glDepthMask(Gdp.RDP_GETOM_Z_UPDATE_EN(Rsp.gdp.otherMode) != 0);
-            if (Gdp.RDP_GETOM_Z_MODE(Rsp.gdp.otherMode) == Gbi.ZMODE_DEC)
+            gl.glDepthMask(GraphicsDisplayProcessor.RDP_GETOM_Z_UPDATE_EN(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) != 0);
+            if (GraphicsDisplayProcessor.RDP_GETOM_Z_MODE(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == Gbi.ZMODE_DEC)
                 gl.glEnable(GL.GL_POLYGON_OFFSET_FILL);
             else {
                 gl.glDisable(GL.GL_POLYGON_OFFSET_FILL);
             }
         }
 
-        if ((Rsp.gdp.changed & Gdp.CHANGED_ALPHACOMPARE) != 0 || (Rsp.gdp.changed & Gdp.CHANGED_RENDERMODE) != 0) {
-            if ((Gdp.RDP_GETOM_ALPHA_COMPARE_EN(Rsp.gdp.otherMode) == Gbi.G_AC_THRESHOLD) && (Gdp.RDP_GETOM_ALPHA_CVG_SELECT(Rsp.gdp.otherMode) == 0)) {
+        if ((RealitySignalProcessor.graphicsDisplayProcessor.changed & GraphicsDisplayProcessor.CHANGED_ALPHACOMPARE) != 0 || (RealitySignalProcessor.graphicsDisplayProcessor.changed & GraphicsDisplayProcessor.CHANGED_RENDERMODE) != 0) {
+            if ((GraphicsDisplayProcessor.RDP_GETOM_ALPHA_COMPARE_EN(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == Gbi.G_AC_THRESHOLD) && (GraphicsDisplayProcessor.RDP_GETOM_ALPHA_CVG_SELECT(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == 0)) {
                 gl.glEnable(GL.GL_ALPHA_TEST);
 
-                gl.glAlphaFunc((Rsp.gdp.blendColor[3] > 0.0f) ? GL.GL_GEQUAL : GL.GL_GREATER, Rsp.gdp.blendColor[3]);
-            } else if (Gdp.RDP_GETOM_CVG_TIMES_ALPHA(Rsp.gdp.otherMode) != 0) {
+                gl.glAlphaFunc((RealitySignalProcessor.graphicsDisplayProcessor.blendColor[3] > 0.0f) ? GL.GL_GEQUAL : GL.GL_GREATER, RealitySignalProcessor.graphicsDisplayProcessor.blendColor[3]);
+            } else if (GraphicsDisplayProcessor.RDP_GETOM_CVG_TIMES_ALPHA(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) != 0) {
                 gl.glEnable(GL.GL_ALPHA_TEST);
 
                 gl.glAlphaFunc(GL.GL_GEQUAL, 0.5f);
@@ -575,59 +575,59 @@ public class OpenGlGdp {
                 gl.glDisable(GL.GL_ALPHA_TEST);
             }
 
-            if (usePolygonStipple && (Gdp.RDP_GETOM_ALPHA_COMPARE_EN(Rsp.gdp.otherMode) == Gbi.G_AC_DITHER) && (Gdp.RDP_GETOM_ALPHA_CVG_SELECT(Rsp.gdp.otherMode) == 0))
+            if (usePolygonStipple && (GraphicsDisplayProcessor.RDP_GETOM_ALPHA_COMPARE_EN(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == Gbi.G_AC_DITHER) && (GraphicsDisplayProcessor.RDP_GETOM_ALPHA_CVG_SELECT(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == 0))
                 gl.glEnable(GL.GL_POLYGON_STIPPLE);
             else
                 gl.glDisable(GL.GL_POLYGON_STIPPLE);
         }
 
-        if ((Rsp.gdp.changed & Gdp.CHANGED_SCISSOR) != 0) {
-            gl.glScissor((int) (Rsp.gdp.scissor.ulx * scaleX), (int) ((screenHeight - Rsp.gdp.scissor.lry) * scaleY + heightOffset),
-                    (int) ((Rsp.gdp.scissor.lrx - Rsp.gdp.scissor.ulx) * scaleX), (int) ((Rsp.gdp.scissor.lry - Rsp.gdp.scissor.uly) * scaleY));
+        if ((RealitySignalProcessor.graphicsDisplayProcessor.changed & GraphicsDisplayProcessor.CHANGED_SCISSOR) != 0) {
+            gl.glScissor((int) (RealitySignalProcessor.graphicsDisplayProcessor.scissor.ulx * scaleX), (int) ((screenHeight - RealitySignalProcessor.graphicsDisplayProcessor.scissor.lry) * scaleY + heightOffset),
+                    (int) ((RealitySignalProcessor.graphicsDisplayProcessor.scissor.lrx - RealitySignalProcessor.graphicsDisplayProcessor.scissor.ulx) * scaleX), (int) ((RealitySignalProcessor.graphicsDisplayProcessor.scissor.lry - RealitySignalProcessor.graphicsDisplayProcessor.scissor.uly) * scaleY));
         }
 
-        if ((Rsp.gdp.changed & Gdp.CHANGED_COMBINE) != 0 || (Rsp.gdp.changed & Gdp.CHANGED_CYCLETYPE) != 0) {
-            if (Gdp.RDP_GETOM_CYCLE_TYPE(Rsp.gdp.otherMode) == Gbi.G_CYC_COPY) {
+        if ((RealitySignalProcessor.graphicsDisplayProcessor.changed & GraphicsDisplayProcessor.CHANGED_COMBINE) != 0 || (RealitySignalProcessor.graphicsDisplayProcessor.changed & GraphicsDisplayProcessor.CHANGED_CYCLETYPE) != 0) {
+            if (GraphicsDisplayProcessor.RDP_GETOM_CYCLE_TYPE(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == Gbi.G_CYC_COPY) {
                 combiners.setCombine(gl, false, combiners.encodeCombineMode(
                         Combiners.G_CCMUX_0, Combiners.G_CCMUX_0, Combiners.G_CCMUX_0, Combiners.G_CCMUX_TEXEL0,
                         Combiners.G_ACMUX_0, Combiners.G_ACMUX_0, Combiners.G_ACMUX_0, Combiners.G_ACMUX_TEXEL0,
                         Combiners.G_CCMUX_0, Combiners.G_CCMUX_0, Combiners.G_CCMUX_0, Combiners.G_CCMUX_TEXEL0,
                         Combiners.G_ACMUX_0, Combiners.G_ACMUX_0, Combiners.G_ACMUX_0, Combiners.G_ACMUX_TEXEL0));
-            } else if (Gdp.RDP_GETOM_CYCLE_TYPE(Rsp.gdp.otherMode) == Gbi.G_CYC_FILL) {
+            } else if (GraphicsDisplayProcessor.RDP_GETOM_CYCLE_TYPE(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == Gbi.G_CYC_FILL) {
                 combiners.setCombine(gl, false, combiners.encodeCombineMode(
                         Combiners.G_CCMUX_0, Combiners.G_CCMUX_0, Combiners.G_CCMUX_0, Combiners.G_CCMUX_SHADE,
                         Combiners.G_ACMUX_0, Combiners.G_ACMUX_0, Combiners.G_ACMUX_0, Combiners.G_ACMUX_1,
                         Combiners.G_CCMUX_0, Combiners.G_CCMUX_0, Combiners.G_CCMUX_0, Combiners.G_CCMUX_SHADE,
                         Combiners.G_ACMUX_0, Combiners.G_ACMUX_0, Combiners.G_ACMUX_0, Combiners.G_ACMUX_1));
             } else {
-                combiners.setCombine(gl, Gdp.RDP_GETOM_CYCLE_TYPE(Rsp.gdp.otherMode) == Gbi.G_CYC_2CYCLE, combiners.combine.getMux());
+                combiners.setCombine(gl, GraphicsDisplayProcessor.RDP_GETOM_CYCLE_TYPE(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == Gbi.G_CYC_2CYCLE, combiners.combine.getMux());
             }
-            Rsp.gdp.changed |= Gdp.CHANGED_COMBINE_COLORS;
+            RealitySignalProcessor.graphicsDisplayProcessor.changed |= GraphicsDisplayProcessor.CHANGED_COMBINE_COLORS;
         }
 
-        if ((Rsp.gdp.changed & Gdp.CHANGED_COMBINE_COLORS) != 0) {
+        if ((RealitySignalProcessor.graphicsDisplayProcessor.changed & GraphicsDisplayProcessor.CHANGED_COMBINE_COLORS) != 0) {
             combiners.updateCombineColors(gl);
-            Rsp.gdp.changed &= ~Gdp.CHANGED_COMBINE_COLORS;
+            RealitySignalProcessor.graphicsDisplayProcessor.changed &= ~GraphicsDisplayProcessor.CHANGED_COMBINE_COLORS;
         }
 
-        if ((Rsp.gdp.changed & Gdp.CHANGED_TEXTURE) != 0 || (Rsp.gdp.changed & Gdp.CHANGED_TILE) != 0 || (cache.changed & TextureCache.CHANGED_TMEM) != 0) {
+        if ((RealitySignalProcessor.graphicsDisplayProcessor.changed & GraphicsDisplayProcessor.CHANGED_TEXTURE) != 0 || (RealitySignalProcessor.graphicsDisplayProcessor.changed & GraphicsDisplayProcessor.CHANGED_TILE) != 0 || (cache.changed & TextureCache.CHANGED_TMEM) != 0) {
             combiners.beginTextureUpdate(gl);
 
             if (combiners.usesT0) {
-                cache.update(Gdp.RDP_GETOM_TLUT_TYPE(Rsp.gdp.otherMode) == Gbi.G_TT_IA16, 0, scaleX, scaleY, (Gdp.RDP_GETOM_SAMPLE_TYPE(Rsp.gdp.otherMode) == Gbi.G_TF_BILERP) || (Gdp.RDP_GETOM_SAMPLE_TYPE(Rsp.gdp.otherMode) == Gbi.G_TF_AVERAGE));
+                cache.update(GraphicsDisplayProcessor.RDP_GETOM_TLUT_TYPE(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == Gbi.G_TT_IA16, 0, scaleX, scaleY, (GraphicsDisplayProcessor.RDP_GETOM_SAMPLE_TYPE(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == Gbi.G_TF_BILERP) || (GraphicsDisplayProcessor.RDP_GETOM_SAMPLE_TYPE(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == Gbi.G_TF_AVERAGE));
 
-                Rsp.gdp.changed &= ~Gdp.CHANGED_TEXTURE;
-                Rsp.gdp.changed &= ~Gdp.CHANGED_TILE;
+                RealitySignalProcessor.graphicsDisplayProcessor.changed &= ~GraphicsDisplayProcessor.CHANGED_TEXTURE;
+                RealitySignalProcessor.graphicsDisplayProcessor.changed &= ~GraphicsDisplayProcessor.CHANGED_TILE;
                 cache.changed &= ~TextureCache.CHANGED_TMEM;
             } else {
                 cache.activateDummy(0);
             }
 
             if (combiners.usesT1) {
-                cache.update(Gdp.RDP_GETOM_TLUT_TYPE(Rsp.gdp.otherMode) == Gbi.G_TT_IA16, 1, scaleX, scaleY, (Gdp.RDP_GETOM_SAMPLE_TYPE(Rsp.gdp.otherMode) == Gbi.G_TF_BILERP) || (Gdp.RDP_GETOM_SAMPLE_TYPE(Rsp.gdp.otherMode) == Gbi.G_TF_AVERAGE));
+                cache.update(GraphicsDisplayProcessor.RDP_GETOM_TLUT_TYPE(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == Gbi.G_TT_IA16, 1, scaleX, scaleY, (GraphicsDisplayProcessor.RDP_GETOM_SAMPLE_TYPE(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == Gbi.G_TF_BILERP) || (GraphicsDisplayProcessor.RDP_GETOM_SAMPLE_TYPE(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == Gbi.G_TF_AVERAGE));
 
-                Rsp.gdp.changed &= ~Gdp.CHANGED_TEXTURE;
-                Rsp.gdp.changed &= ~Gdp.CHANGED_TILE;
+                RealitySignalProcessor.graphicsDisplayProcessor.changed &= ~GraphicsDisplayProcessor.CHANGED_TEXTURE;
+                RealitySignalProcessor.graphicsDisplayProcessor.changed &= ~GraphicsDisplayProcessor.CHANGED_TILE;
                 cache.changed &= ~TextureCache.CHANGED_TMEM;
             } else {
                 cache.activateDummy(1);
@@ -636,14 +636,14 @@ public class OpenGlGdp {
             combiners.endTextureUpdate(gl);
         }
 
-        if ((Rsp.gdp.changed & Gdp.CHANGED_RENDERMODE) != 0 || (Rsp.gdp.changed & Gdp.CHANGED_CYCLETYPE) != 0) {
-            if ((Gdp.RDP_GETOM_FORCE_BLEND(Rsp.gdp.otherMode) != 0) &&
-                    (Gdp.RDP_GETOM_CYCLE_TYPE(Rsp.gdp.otherMode) != Gbi.G_CYC_COPY) &&
-                    (Gdp.RDP_GETOM_CYCLE_TYPE(Rsp.gdp.otherMode) != Gbi.G_CYC_FILL) &&
-                    (Gdp.RDP_GETOM_ALPHA_CVG_SELECT(Rsp.gdp.otherMode) == 0)) {
+        if ((RealitySignalProcessor.graphicsDisplayProcessor.changed & GraphicsDisplayProcessor.CHANGED_RENDERMODE) != 0 || (RealitySignalProcessor.graphicsDisplayProcessor.changed & GraphicsDisplayProcessor.CHANGED_CYCLETYPE) != 0) {
+            if ((GraphicsDisplayProcessor.RDP_GETOM_FORCE_BLEND(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) != 0) &&
+                    (GraphicsDisplayProcessor.RDP_GETOM_CYCLE_TYPE(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) != Gbi.G_CYC_COPY) &&
+                    (GraphicsDisplayProcessor.RDP_GETOM_CYCLE_TYPE(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) != Gbi.G_CYC_FILL) &&
+                    (GraphicsDisplayProcessor.RDP_GETOM_ALPHA_CVG_SELECT(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == 0)) {
                 gl.glEnable(GL.GL_BLEND);
 
-                switch (Rsp.gdp.otherMode.w1 >> 16) {
+                switch (RealitySignalProcessor.graphicsDisplayProcessor.otherMode.w1 >> 16) {
                     case 0x0448, 0x055A -> gl.glBlendFunc(GL.GL_ONE, GL.GL_ONE);
                     case 0x0C08, 0x0F0A -> gl.glBlendFunc(GL.GL_ONE, GL.GL_ZERO);
                     case 0x0C18, 0x0C19, 0x0050, 0x0055 -> gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
@@ -654,15 +654,15 @@ public class OpenGlGdp {
                 gl.glDisable(GL.GL_BLEND);
             }
 
-            if (Gdp.RDP_GETOM_CYCLE_TYPE(Rsp.gdp.otherMode) == Gbi.G_CYC_FILL) {
+            if (GraphicsDisplayProcessor.RDP_GETOM_CYCLE_TYPE(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == Gbi.G_CYC_FILL) {
                 gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
                 gl.glEnable(GL.GL_BLEND);
             }
         }
 
         cache.changed &= TextureCache.CHANGED_TMEM;
-        Rsp.gdp.changed &= Gdp.CHANGED_TILE;
-        Rsp.gdp.changed &= Gdp.CHANGED_TEXTURE;
+        RealitySignalProcessor.graphicsDisplayProcessor.changed &= GraphicsDisplayProcessor.CHANGED_TILE;
+        RealitySignalProcessor.graphicsDisplayProcessor.changed &= GraphicsDisplayProcessor.CHANGED_TEXTURE;
     }
 
     private static class GLSimpleVertex {

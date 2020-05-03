@@ -1,6 +1,6 @@
 package gln64j.opcodes;
 
-import gln64j.rdp.Gdp;
+import gln64j.rdp.GraphicsDisplayProcessor;
 import gln64j.rsp.Gsp;
 import static me.hydos.J64.util.debug.Debug.*;
 import gln64j.rsp.GBIFunc;
@@ -20,9 +20,9 @@ public class L3dex2 extends F3dex2 {
         }
     };
     
-    public static void L3DEX2_Init(Gsp rsp, Gdp rdp) {
+    public static void L3DEX2_Init(Gsp rsp, GraphicsDisplayProcessor rdp) {
         gsp = rsp;
-        gdp = rdp;
+        graphicsDisplayProcessor = rdp;
         F3dex2.GBI_InitFlags();
         G_RDPHALF_2 = F3dex2.F3DEX2_RDPHALF_2;
         G_SETOTHERMODE_H = F3dex2.F3DEX2_SETOTHERMODE_H;

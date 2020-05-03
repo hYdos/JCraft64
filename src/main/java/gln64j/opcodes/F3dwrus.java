@@ -1,6 +1,6 @@
 package gln64j.opcodes;
 
-import gln64j.rdp.Gdp;
+import gln64j.rdp.GraphicsDisplayProcessor;
 import gln64j.rsp.Gsp;
 import static me.hydos.J64.util.debug.Debug.*;
 import gln64j.rsp.GBIFunc;
@@ -30,9 +30,9 @@ public class F3dwrus extends F3d {
         }
     };
     
-    public static void F3DWRUS_Init(Gsp rsp, Gdp rdp) {
+    public static void F3DWRUS_Init(Gsp rsp, GraphicsDisplayProcessor rdp) {
         gsp = rsp;
-        gdp = rdp;
+        graphicsDisplayProcessor = rdp;
         F3d.GBI_InitFlags();
         G_SPNOOP = F3d.F3D_SPNOOP;
         G_MTX = F3d.F3D_MTX;

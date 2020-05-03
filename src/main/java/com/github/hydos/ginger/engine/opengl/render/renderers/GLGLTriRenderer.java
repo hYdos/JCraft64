@@ -7,6 +7,7 @@ import com.github.hydos.ginger.engine.opengl.render.GLRenderManager;
 import com.github.hydos.ginger.engine.opengl.render.models.RawModel;
 import com.github.hydos.ginger.engine.opengl.render.shaders.GLObjectShader;
 import com.github.hydos.ginger.engine.opengl.render.texture.ModelTexture;
+import com.github.hydos.ginger.engine.opengl.utils.GLLoader;
 import gln64j.GLN64jPlugin;
 import gln64j.OpenGlGdp;
 import org.joml.Matrix4f;

@@ -5,7 +5,7 @@ import gln64j.Registers;
 import gln64j.Gbi;
 import gln64j.rdp.combiners.Combiners;
 
-public class Gdp {
+public class GraphicsDisplayProcessor {
 
     public static final int CHANGED_RENDERMODE = 0x001;
     public static final int CHANGED_CYCLETYPE = 0x002;
@@ -38,48 +38,48 @@ public class Gdp {
     public static final int DEPTH_SOURCE = 0x4;
     public static final int ALPHA_COMPARE = 0x3;
 
-    public static final int RDP_GETOM_CYCLE_TYPE(OtherMode om) {
+    public static int RDP_GETOM_CYCLE_TYPE(OtherMode om) {
         return (((om).w0 >> 20) & 0x3);
     }
 
-    public static final int RDP_GETOM_TLUT_TYPE(OtherMode om) {
+    public static int RDP_GETOM_TLUT_TYPE(OtherMode om) {
         return (((om).w0 >> 14) & 0x3);
     }
 
-    public static final int RDP_GETOM_SAMPLE_TYPE(OtherMode om) {
+    public static int RDP_GETOM_SAMPLE_TYPE(OtherMode om) {
         return (((om).w0 >> 12) & 0x3);
     }
 
-    public static final int RDP_GETOM_FORCE_BLEND(OtherMode om) {
+    public static int RDP_GETOM_FORCE_BLEND(OtherMode om) {
         return (((om).w1 & 0x4000) != 0 ? 1 : 0);
     }
 
-    public static final int RDP_GETOM_ALPHA_CVG_SELECT(OtherMode om) {
+    public static int RDP_GETOM_ALPHA_CVG_SELECT(OtherMode om) {
         return (((om).w1 & 0x2000) != 0 ? 1 : 0);
     }
 
-    public static final int RDP_GETOM_CVG_TIMES_ALPHA(OtherMode om) {
+    public static int RDP_GETOM_CVG_TIMES_ALPHA(OtherMode om) {
         return (((om).w1 & 0x1000) != 0 ? 1 : 0);
     }
 
-    public static final int RDP_GETOM_Z_MODE(OtherMode om) {
+    public static int RDP_GETOM_Z_MODE(OtherMode om) {
         return (((om).w1 >> 10) & 0x3);
     }
 
-    public static final int RDP_GETOM_Z_UPDATE_EN(OtherMode om) {
+    public static int RDP_GETOM_Z_UPDATE_EN(OtherMode om) {
         return (((om).w1 & 0x20) != 0 ? 1 : 0);
     }
 
-    public static final int RDP_GETOM_Z_COMPARE_EN(OtherMode om) {
+    public static int RDP_GETOM_Z_COMPARE_EN(OtherMode om) {
         return (((om).w1 & 0x10) != 0 ? 1 : 0);
     }
 
-    public static final int RDP_GETOM_Z_SOURCE_SEL(OtherMode om) {
+    public static int RDP_GETOM_Z_SOURCE_SEL(OtherMode om) {
         return (((om).w1 & 0x04) != 0 ? 1 : 0);
     }
 
-    public static final int RDP_GETOM_ALPHA_COMPARE_EN(OtherMode om) {
-        return (((om).w1 >> 0) & 0x3);
+    public static int RDP_GETOM_ALPHA_COMPARE_EN(OtherMode om) {
+        return (((om).w1) & 0x3);
     }
 
 
@@ -145,7 +145,7 @@ public class Gdp {
     protected Registers reg;
 
 
-    public Gdp(Runnable checkInterrupts, Registers regs) {
+    public GraphicsDisplayProcessor(Runnable checkInterrupts, Registers regs) {
         this.checkInterrupts = checkInterrupts;
         this.reg = regs;
 

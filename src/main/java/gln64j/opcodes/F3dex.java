@@ -1,6 +1,6 @@
 package gln64j.opcodes;
 
-import gln64j.rdp.Gdp;
+import gln64j.rdp.GraphicsDisplayProcessor;
 import gln64j.rsp.Gsp;
 
 import static me.hydos.J64.util.debug.Debug.*;
@@ -134,9 +134,9 @@ public class F3dex extends F3d {
         G_MWO_bLIGHT_8 = F3DEX_MWO_bLIGHT_8;
     }
 
-    public static void F3DEX_Init(Gsp rsp, Gdp rdp) {
+    public static void F3DEX_Init(Gsp rsp, GraphicsDisplayProcessor rdp) {
         gsp = rsp;
-        gdp = rdp;
+        graphicsDisplayProcessor = rdp;
         GBI_InitFlags();
         G_SPNOOP = F3d.F3D_SPNOOP;
         G_MTX = F3d.F3D_MTX;

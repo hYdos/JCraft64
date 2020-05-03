@@ -3,7 +3,7 @@ package gln64j.rsp;
 import me.hydos.J64.util.debug.Debug;
 import gln64j.GLN64jPlugin;
 import gln64j.Gbi;
-import gln64j.Rsp;
+import gln64j.RealitySignalProcessor;
 import gln64j.opcodes.F3d;
 import gln64j.opcodes.F3ddkr;
 import gln64j.opcodes.F3dex;
@@ -82,20 +82,20 @@ public class Microcodes {
             for (int i = 0; i <= 0xFF; i++)
                 cmds[i] = gbiUnknown;
 
-            Rdpfuncs2.RDP_Init(Rsp.gsp, Rsp.gdp);
+            Rdpfuncs2.RDP_Init(RealitySignalProcessor.gsp, RealitySignalProcessor.graphicsDisplayProcessor);
             switch (microcode.type) {
-                case Microcode.F3D -> F3d.F3D_Init(Rsp.gsp, Rsp.gdp);
-                case Microcode.F3DEX -> F3dex.F3DEX_Init(Rsp.gsp, Rsp.gdp);
-                case Microcode.F3DEX2 -> F3dex2.F3DEX2_Init(Rsp.gsp, Rsp.gdp);
-                case Microcode.L3D -> L3d.L3D_Init(Rsp.gsp, Rsp.gdp);
-                case Microcode.L3DEX -> L3dex.L3DEX_Init(Rsp.gsp, Rsp.gdp);
-                case Microcode.L3DEX2 -> L3dex2.L3DEX2_Init(Rsp.gsp, Rsp.gdp);
-                case Microcode.S2DEX -> S2dex.S2DEX_Init(Rsp.gsp, Rsp.gdp);
-                case Microcode.S2DEX2 -> S2dex2.S2DEX2_Init(Rsp.gsp, Rsp.gdp);
-                case Microcode.F3DDKR -> F3ddkr.F3DDKR_Init(Rsp.gsp, Rsp.gdp);
-                case Microcode.F3DWRUS -> F3dwrus.F3DWRUS_Init(Rsp.gsp, Rsp.gdp);
-                case Microcode.F3DPD -> F3dpd.F3DPD_Init(Rsp.gsp, Rsp.gdp);
-                case Microcode.F3DEXBG -> F3dexbg.F3DEXBG_Init(Rsp.gsp, Rsp.gdp);
+                case Microcode.F3D -> F3d.F3D_Init(RealitySignalProcessor.gsp, RealitySignalProcessor.graphicsDisplayProcessor);
+                case Microcode.F3DEX -> F3dex.F3DEX_Init(RealitySignalProcessor.gsp, RealitySignalProcessor.graphicsDisplayProcessor);
+                case Microcode.F3DEX2 -> F3dex2.F3DEX2_Init(RealitySignalProcessor.gsp, RealitySignalProcessor.graphicsDisplayProcessor);
+                case Microcode.L3D -> L3d.L3D_Init(RealitySignalProcessor.gsp, RealitySignalProcessor.graphicsDisplayProcessor);
+                case Microcode.L3DEX -> L3dex.L3DEX_Init(RealitySignalProcessor.gsp, RealitySignalProcessor.graphicsDisplayProcessor);
+                case Microcode.L3DEX2 -> L3dex2.L3DEX2_Init(RealitySignalProcessor.gsp, RealitySignalProcessor.graphicsDisplayProcessor);
+                case Microcode.S2DEX -> S2dex.S2DEX_Init(RealitySignalProcessor.gsp, RealitySignalProcessor.graphicsDisplayProcessor);
+                case Microcode.S2DEX2 -> S2dex2.S2DEX2_Init(RealitySignalProcessor.gsp, RealitySignalProcessor.graphicsDisplayProcessor);
+                case Microcode.F3DDKR -> F3ddkr.F3DDKR_Init(RealitySignalProcessor.gsp, RealitySignalProcessor.graphicsDisplayProcessor);
+                case Microcode.F3DWRUS -> F3dwrus.F3DWRUS_Init(RealitySignalProcessor.gsp, RealitySignalProcessor.graphicsDisplayProcessor);
+                case Microcode.F3DPD -> F3dpd.F3DPD_Init(RealitySignalProcessor.gsp, RealitySignalProcessor.graphicsDisplayProcessor);
+                case Microcode.F3DEXBG -> F3dexbg.F3DEXBG_Init(RealitySignalProcessor.gsp, RealitySignalProcessor.graphicsDisplayProcessor);
             }
         }
 

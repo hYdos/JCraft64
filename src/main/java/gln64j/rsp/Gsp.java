@@ -3,8 +3,8 @@ package gln64j.rsp;
 import gln64j.Gbi;
 import gln64j.OpenGl;
 import gln64j.OpenGlGdp;
-import gln64j.Rsp;
-import gln64j.rdp.Gdp;
+import gln64j.RealitySignalProcessor;
+import gln64j.rdp.GraphicsDisplayProcessor;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -129,29 +129,28 @@ public class Gsp {
 
     public int changed;
 
-    private int[] PC = new int[18];
+    private final int[] PC = new int[18];
     private int PCi;
-    private int cmd;
     private int nextCmd;
     private boolean halt;
-    private int[] segment = new int[16];
+    private final int[] segment = new int[16];
     public Matrix matrix = new Matrix();
     private int vertexi;
-    private Light[] lights = new Light[12];
-    private SPVertex[] vertices = new SPVertex[80];
-    private int[] status = new int[4];
-    private DMAOffsets DMAOffsets = new DMAOffsets();
+    private final Light[] lights = new Light[12];
+    private final SPVertex[] vertices = new SPVertex[80];
+    private final int[] status = new int[4];
+    private final DMAOffsets DMAOffsets = new DMAOffsets();
     private int numLights;
     private int uc8_normale_addr = 0;
-    private float[] uc8_coord_mod = new float[16];
+    private final float[] uc8_coord_mod = new float[16];
     protected float[][] tmpmtx = new float[4][4];
 
     protected ByteBuffer rdram;
-    private ByteBuffer dmem;
-    private int rdramSize;
-    private Microcodes gbi = new Microcodes();
+    private final ByteBuffer dmem;
+    private final int rdramSize;
+    private final Microcodes gbi = new Microcodes();
 
-    private float[][] identityMatrix = {
+    private final float[][] identityMatrix = {
             {1.0f, 0.0f, 0.0f, 0.0f},
             {0.0f, 1.0f, 0.0f, 0.0f},
             {0.0f, 0.0f, 1.0f, 0.0f},
@@ -211,7 +210,7 @@ public class Gsp {
             int pAddr = PC[PCi];
             int w0 = (ram[pAddr] << 24) | ((ram[pAddr + 1] & 0xff) << 16) | ((ram[pAddr + 2] & 0xff) << 8) | (ram[pAddr + 3] & 0xff);
             int w1 = (ram[pAddr + 4] << 24) | ((ram[pAddr + 5] & 0xff) << 16) | ((ram[pAddr + 6] & 0xff) << 8) | (ram[pAddr + 7] & 0xff);
-            cmd = (w0 >> 24) & Gbi.SR_MASK_8; // &0xff
+            int cmd = (w0 >> 24) & Gbi.SR_MASK_8; // &0xff
 
             PC[PCi] += 8;
             pAddr = PC[PCi];
@@ -221,8 +220,8 @@ public class Gsp {
             gbi.cmds[cmd].exec(w0, w1);
         }
 
-        Rsp.gdp.DList++;
-        Rsp.gdp.changed |= Gdp.CHANGED_COLORBUFFER;
+        RealitySignalProcessor.graphicsDisplayProcessor.DList++;
+        RealitySignalProcessor.graphicsDisplayProcessor.changed |= GraphicsDisplayProcessor.CHANGED_COLORBUFFER;
     }
 
     public int getCmd() {
@@ -867,6 +866,7 @@ public class Gsp {
         changed &= ~CHANGED_MATRIX;
     }
 
+    //TODO: get this in the shader
     private void gSPProcessVertex(SPVertex vert) {
         float intensity;
         float r, g, b;
@@ -1073,7 +1073,7 @@ public class Gsp {
                     OpenGlGdp.OGL_AddTriangle(nearVertices[0].vtx, nearVertices[0].color, nearVertices[0].tex,
                             nearVertices[2].vtx, nearVertices[2].color, nearVertices[2].tex,
                             nearVertices[3].vtx, nearVertices[3].color, nearVertices[3].tex);
-                if (Gdp.RDP_GETOM_Z_MODE(Rsp.gdp.otherMode) == Gbi.ZMODE_DEC)
+                if (GraphicsDisplayProcessor.RDP_GETOM_Z_MODE(RealitySignalProcessor.graphicsDisplayProcessor.otherMode) == Gbi.ZMODE_DEC)
                     OpenGl.gl.glEnable(GL.GL_POLYGON_OFFSET_FILL);
 
             } else {
@@ -1083,7 +1083,7 @@ public class Gsp {
             }
         }
 
-        Rsp.gdp.update();
+        RealitySignalProcessor.graphicsDisplayProcessor.update();
     }
 
 }

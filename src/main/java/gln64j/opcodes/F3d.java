@@ -1,7 +1,7 @@
 package gln64j.opcodes;
 
 import gln64j.rsp.Gsp;
-import gln64j.rdp.Gdp;
+import gln64j.rdp.GraphicsDisplayProcessor;
 
 import static me.hydos.J64.util.debug.Debug.*;
 
@@ -75,7 +75,7 @@ public class F3d {
     public static int half_1, half_2;
 
     protected static Gsp gsp;
-    protected static Gdp gdp;
+    protected static GraphicsDisplayProcessor graphicsDisplayProcessor;
 
     public static GBIFunc F3D_SPNoOp = new GBIFunc() {
         public void exec(int w0, int w1) {
@@ -259,7 +259,7 @@ public class F3d {
 
     public static GBIFunc F3D_Texture = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPTexture(((w1 >> 16) & SR_MASK_16) * FIXED2FLOATRECIP16,
+            graphicsDisplayProcessor.gDPTexture(((w1 >> 16) & SR_MASK_16) * FIXED2FLOATRECIP16,
                     (w1 & SR_MASK_16) * FIXED2FLOATRECIP16,
                     (w0 >> 11) & SR_MASK_3,
                     (w0 >> 8) & SR_MASK_3,
@@ -271,37 +271,37 @@ public class F3d {
         public void exec(int w0, int w1) {
             switch ((w0 >> 8) & SR_MASK_8) {
                 case G_MDSFT_PIPELINE:
-                    gdp.gDPPipelineMode(w1 >>> G_MDSFT_PIPELINE);
+                    graphicsDisplayProcessor.gDPPipelineMode(w1 >>> G_MDSFT_PIPELINE);
                     break;
                 case G_MDSFT_CYCLETYPE:
-                    gdp.gDPSetCycleType(w1 >>> G_MDSFT_CYCLETYPE);
+                    graphicsDisplayProcessor.gDPSetCycleType(w1 >>> G_MDSFT_CYCLETYPE);
                     break;
                 case G_MDSFT_TEXTPERSP:
-                    gdp.gDPSetTexturePersp(w1 >>> G_MDSFT_TEXTPERSP);
+                    graphicsDisplayProcessor.gDPSetTexturePersp(w1 >>> G_MDSFT_TEXTPERSP);
                     break;
                 case G_MDSFT_TEXTDETAIL:
-                    gdp.gDPSetTextureDetail(w1 >>> G_MDSFT_TEXTDETAIL);
+                    graphicsDisplayProcessor.gDPSetTextureDetail(w1 >>> G_MDSFT_TEXTDETAIL);
                     break;
                 case G_MDSFT_TEXTLOD:
-                    gdp.gDPSetTextureLOD(w1 >>> G_MDSFT_TEXTLOD);
+                    graphicsDisplayProcessor.gDPSetTextureLOD(w1 >>> G_MDSFT_TEXTLOD);
                     break;
                 case G_MDSFT_TEXTLUT:
-                    gdp.gDPSetTextureLUT(w1 >>> G_MDSFT_TEXTLUT);
+                    graphicsDisplayProcessor.gDPSetTextureLUT(w1 >>> G_MDSFT_TEXTLUT);
                     break;
                 case G_MDSFT_TEXTFILT:
-                    gdp.gDPSetTextureFilter(w1 >>> G_MDSFT_TEXTFILT);
+                    graphicsDisplayProcessor.gDPSetTextureFilter(w1 >>> G_MDSFT_TEXTFILT);
                     break;
                 case G_MDSFT_TEXTCONV:
-                    gdp.gDPSetTextureConvert(w1 >>> G_MDSFT_TEXTCONV);
+                    graphicsDisplayProcessor.gDPSetTextureConvert(w1 >>> G_MDSFT_TEXTCONV);
                     break;
                 case G_MDSFT_COMBKEY:
-                    gdp.gDPSetCombineKey(w1 >>> G_MDSFT_COMBKEY);
+                    graphicsDisplayProcessor.gDPSetCombineKey(w1 >>> G_MDSFT_COMBKEY);
                     break;
                 case G_MDSFT_RGBDITHER:
-                    gdp.gDPSetColorDither(w1 >>> G_MDSFT_RGBDITHER);
+                    graphicsDisplayProcessor.gDPSetColorDither(w1 >>> G_MDSFT_RGBDITHER);
                     break;
                 case G_MDSFT_ALPHADITHER:
-                    gdp.gDPSetAlphaDither(w1 >>> G_MDSFT_ALPHADITHER);
+                    graphicsDisplayProcessor.gDPSetAlphaDither(w1 >>> G_MDSFT_ALPHADITHER);
                     break;
                 default:
                     int shift = (w0 >> 8) & SR_MASK_8;
@@ -310,10 +310,10 @@ public class F3d {
 
 //                    gdp.otherMode.setH(gdp.otherMode.getH() & ~mask);
 //                    gdp.otherMode.setH(gdp.otherMode.getH() | (w1 & mask));
-                    gdp.otherMode.w0 = (gdp.otherMode.w0 & ~mask);
-                    gdp.otherMode.w0 = (gdp.otherMode.w0 | (w1 & mask));
+                    graphicsDisplayProcessor.otherMode.w0 = (graphicsDisplayProcessor.otherMode.w0 & ~mask);
+                    graphicsDisplayProcessor.otherMode.w0 = (graphicsDisplayProcessor.otherMode.w0 | (w1 & mask));
 
-                    gdp.changed |= Gdp.CHANGED_CYCLETYPE;
+                    graphicsDisplayProcessor.changed |= GraphicsDisplayProcessor.CHANGED_CYCLETYPE;
                     break;
             }
         }
@@ -323,22 +323,22 @@ public class F3d {
         public void exec(int w0, int w1) {
             switch ((w0 >> 8) & SR_MASK_8) {
                 case G_MDSFT_ALPHACOMPARE:
-                    gdp.gDPSetAlphaCompare(w1 >>> G_MDSFT_ALPHACOMPARE);
+                    graphicsDisplayProcessor.gDPSetAlphaCompare(w1 >>> G_MDSFT_ALPHACOMPARE);
                     break;
                 case G_MDSFT_ZSRCSEL:
-                    gdp.gDPSetDepthSource(w1 >>> G_MDSFT_ZSRCSEL);
+                    graphicsDisplayProcessor.gDPSetDepthSource(w1 >>> G_MDSFT_ZSRCSEL);
                     break;
                 case G_MDSFT_RENDERMODE:
-                    gdp.gDPSetRenderMode(w1 & 0xCCCCFFFF, w1 & 0x3333FFFF);
+                    graphicsDisplayProcessor.gDPSetRenderMode(w1 & 0xCCCCFFFF, w1 & 0x3333FFFF);
                     break;
                 default:
                     int shift = (w0 >> 8) & SR_MASK_8;
                     int length = w0 & SR_MASK_8;
                     int mask = ((1 << length) - 1) << shift;
-                    gdp.otherMode.w1 = (gdp.otherMode.w1 & ~mask);
-                    gdp.otherMode.w1 = (gdp.otherMode.w1 | (w1 & mask));
+                    graphicsDisplayProcessor.otherMode.w1 = (graphicsDisplayProcessor.otherMode.w1 & ~mask);
+                    graphicsDisplayProcessor.otherMode.w1 = (graphicsDisplayProcessor.otherMode.w1 | (w1 & mask));
 
-                    gdp.changed |= Gdp.CHANGED_RENDERMODE | Gdp.CHANGED_ALPHACOMPARE;
+                    graphicsDisplayProcessor.changed |= GraphicsDisplayProcessor.CHANGED_RENDERMODE | GraphicsDisplayProcessor.CHANGED_ALPHACOMPARE;
                     break;
             }
         }
@@ -428,9 +428,9 @@ public class F3d {
         G_MWO_bLIGHT_8 = F3D_MWO_bLIGHT_8;
     }
 
-    public static void F3D_Init(Gsp rsp, Gdp rdp) {
+    public static void F3D_Init(Gsp rsp, GraphicsDisplayProcessor rdp) {
         gsp = rsp;
-        gdp = rdp;
+        graphicsDisplayProcessor = rdp;
         GBI_InitFlags();
         G_SPNOOP = F3D_SPNOOP;
         G_MTX = F3D_MTX;

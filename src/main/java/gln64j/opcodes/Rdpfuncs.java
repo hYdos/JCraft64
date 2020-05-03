@@ -1,6 +1,6 @@
 package gln64j.opcodes;
 
-import gln64j.rdp.Gdp;
+import gln64j.rdp.GraphicsDisplayProcessor;
 import gln64j.rsp.Gsp;
 import static me.hydos.J64.util.debug.Debug.*;
 import gln64j.rsp.GBIFunc;
@@ -9,7 +9,7 @@ import static gln64j.Gbi.*;
 public class Rdpfuncs {
     
     protected static Gsp gsp;
-    protected static Gdp gdp;
+    protected static GraphicsDisplayProcessor graphicsDisplayProcessor;
     
     public static GBIFunc RDP_Unknown = new GBIFunc() {
         public void exec(int w0, int w1) {
@@ -22,13 +22,13 @@ public class Rdpfuncs {
     
     public static GBIFunc RDP_NoOp = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPNoOp();
+            graphicsDisplayProcessor.gDPNoOp();
         }
     };
     
     public static GBIFunc RDP_SetCImg = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPSetColorImage((w0>>21)&SR_MASK_3,      // fmt
+            graphicsDisplayProcessor.gDPSetColorImage((w0>>21)&SR_MASK_3,      // fmt
                     (w0>>19)&SR_MASK_2,      // size
                     (w0&SR_MASK_12) + 1,     // width
                     gsp.RSP_SegmentToPhysical(w1));           // img
@@ -37,13 +37,13 @@ public class Rdpfuncs {
     
     public static GBIFunc RDP_SetZImg = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPSetDepthImage(gsp.RSP_SegmentToPhysical(w1));	// img
+            graphicsDisplayProcessor.gDPSetDepthImage(gsp.RSP_SegmentToPhysical(w1));	// img
         }
     };
     
     public static GBIFunc RDP_SetTImg = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPSetTextureImage((w0>>21)&SR_MASK_3,         // fmt
+            graphicsDisplayProcessor.gDPSetTextureImage((w0>>21)&SR_MASK_3,         // fmt
                     (w0>>19)&SR_MASK_2,         // siz
                     (w0&SR_MASK_12) + 1,	// width
                     gsp.RSP_SegmentToPhysical(w1));                 // img
@@ -52,14 +52,14 @@ public class Rdpfuncs {
     
     public static GBIFunc RDP_SetCombine = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPSetCombine(w0&SR_MASK_24,	// muxs0
+            graphicsDisplayProcessor.gDPSetCombine(w0&SR_MASK_24,	// muxs0
                     w1);		// muxs1
         }
     };
     
     public static GBIFunc RDP_SetEnvColor = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPSetEnvColor((w1>>24)&SR_MASK_8,	// r
+            graphicsDisplayProcessor.gDPSetEnvColor((w1>>24)&SR_MASK_8,	// r
                     (w1>>16)&SR_MASK_8,	// g
                     (w1>>8)&SR_MASK_8,	// b
                     w1&SR_MASK_8);         // a
@@ -68,7 +68,7 @@ public class Rdpfuncs {
     
     public static GBIFunc RDP_SetPrimColor = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPSetPrimColor(
+            graphicsDisplayProcessor.gDPSetPrimColor(
                     //_SHIFTL(w0,  8, 8),	// m
                     (w0&SR_MASK_8)<<8,
                     //_SHIFTL(w0,  0, 8),	// l
@@ -82,7 +82,7 @@ public class Rdpfuncs {
     
     public static GBIFunc RDP_SetBlendColor = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPSetBlendColor((w1>>24)&SR_MASK_8,	// r
+            graphicsDisplayProcessor.gDPSetBlendColor((w1>>24)&SR_MASK_8,	// r
                     (w1>>16)&SR_MASK_8,	// g
                     (w1>>8)&SR_MASK_8,	// b
                     w1&SR_MASK_8);	// a
@@ -91,7 +91,7 @@ public class Rdpfuncs {
     
     public static GBIFunc RDP_SetFogColor = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPSetFogColor((w1>>24)&SR_MASK_8,	// r
+            graphicsDisplayProcessor.gDPSetFogColor((w1>>24)&SR_MASK_8,	// r
                     (w1>>16)&SR_MASK_8,	// g
                     (w1>>8)&SR_MASK_8,	// b
                     w1&SR_MASK_8);         // a
@@ -100,13 +100,13 @@ public class Rdpfuncs {
     
     public static GBIFunc RDP_SetFillColor = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPSetFillColor(w1);
+            graphicsDisplayProcessor.gDPSetFillColor(w1);
         }
     };
     
     public static GBIFunc RDP_FillRect = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPFillRectangle((w1>>14)&SR_MASK_10,         // ulx
+            graphicsDisplayProcessor.gDPFillRectangle((w1>>14)&SR_MASK_10,         // ulx
                     (w1>>2)&SR_MASK_10,          // uly
                     (w0>>14)&SR_MASK_10,         // lrx
                     (w0>>2)&SR_MASK_10);        // lry
@@ -115,7 +115,7 @@ public class Rdpfuncs {
     
     public static GBIFunc RDP_SetTile = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPSetTile((w0>>21)&SR_MASK_3,         // fmt
+            graphicsDisplayProcessor.gDPSetTile((w0>>21)&SR_MASK_3,         // fmt
                     (w0>>19)&SR_MASK_2,         // siz
                     (w0>>9)&SR_MASK_9,          // line
                     w0&SR_MASK_9,               // tmem
@@ -132,7 +132,7 @@ public class Rdpfuncs {
     
     public static GBIFunc RDP_LoadTile = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPLoadTile((w1>>24)&SR_MASK_3,	// tile
+            graphicsDisplayProcessor.gDPLoadTile((w1>>24)&SR_MASK_3,	// tile
                     (w0>>12)&SR_MASK_12,	// uls
                     w0&SR_MASK_12,		// ult
                     (w1>>12)&SR_MASK_12,	// lrs
@@ -142,7 +142,7 @@ public class Rdpfuncs {
     
     public static GBIFunc RDP_LoadBlock = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPLoadBlock((w1>>24)&SR_MASK_3,	// tile
+            graphicsDisplayProcessor.gDPLoadBlock((w1>>24)&SR_MASK_3,	// tile
                     (w0>>12)&SR_MASK_12,	// uls
                     w0&SR_MASK_12,            // ult
                     (w1>>12)&SR_MASK_12,	// lrs
@@ -152,7 +152,7 @@ public class Rdpfuncs {
     
     public static GBIFunc RDP_SetTileSize = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPSetTileSize((w1>>24)&SR_MASK_3,	// tile
+            graphicsDisplayProcessor.gDPSetTileSize((w1>>24)&SR_MASK_3,	// tile
                     (w0>>12)&SR_MASK_12,	// uls
                     w0&SR_MASK_12,          // ult
                     (w1>>12)&SR_MASK_12,	// lrs
@@ -162,7 +162,7 @@ public class Rdpfuncs {
     
     public static GBIFunc RDP_LoadTLUT = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPLoadTLUT((w1>>24)&SR_MASK_3,        // tile
+            graphicsDisplayProcessor.gDPLoadTLUT((w1>>24)&SR_MASK_3,        // tile
                     (w0>>12)&SR_MASK_12,       // uls
                     w0&SR_MASK_12,             // ult
                     (w1>>12)&SR_MASK_12,       // lrs
@@ -172,21 +172,21 @@ public class Rdpfuncs {
     
     public static GBIFunc RDP_SetOtherMode = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPSetOtherMode(w0&SR_MASK_24,         // mode0
+            graphicsDisplayProcessor.gDPSetOtherMode(w0&SR_MASK_24,         // mode0
                     w1);			// mode1
         }
     };
     
     public static GBIFunc RDP_SetPrimDepth = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPSetPrimDepth((w1>>16)&SR_MASK_16,	// z
+            graphicsDisplayProcessor.gDPSetPrimDepth((w1>>16)&SR_MASK_16,	// z
                     w1&SR_MASK_16);	// dz
         }
     };
     
     public static GBIFunc RDP_SetScissor = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPSetScissor((w1>>24)&SR_MASK_2,			// mode
+            graphicsDisplayProcessor.gDPSetScissor((w1>>24)&SR_MASK_2,			// mode
                     ((w0>>12)&SR_MASK_12) * FIXED2FLOATRECIP2,	// ulx
                     (w0&SR_MASK_12) * FIXED2FLOATRECIP2,            // uly
                     ((w1>>12)&SR_MASK_12) * FIXED2FLOATRECIP2,	// lrx
@@ -196,7 +196,7 @@ public class Rdpfuncs {
     
     public static GBIFunc RDP_SetConvert = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPSetConvert((w0>>13)&SR_MASK_9,                              // k0
+            graphicsDisplayProcessor.gDPSetConvert((w0>>13)&SR_MASK_9,                              // k0
                     (w0>>4)&SR_MASK_9,                               // k1
                     ((w0&SR_MASK_4)<<5) | ((w1>>25)&SR_MASK_5),	// k2
                     (w1>>18)&SR_MASK_9,                              // k3
@@ -207,7 +207,7 @@ public class Rdpfuncs {
     
     public static GBIFunc RDP_SetKeyR = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPSetKeyR((w1>>8)&SR_MASK_8,		// cR
+            graphicsDisplayProcessor.gDPSetKeyR((w1>>8)&SR_MASK_8,		// cR
                     w1&SR_MASK_8,		// sR
                     (w1>>16)&SR_MASK_12);	// wR
         }
@@ -215,7 +215,7 @@ public class Rdpfuncs {
     
     public static GBIFunc RDP_SetKeyGB = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPSetKeyGB((w1>>24)&SR_MASK_8,		// cG
+            graphicsDisplayProcessor.gDPSetKeyGB((w1>>24)&SR_MASK_8,		// cG
                     (w1>>16)&SR_MASK_8,		// sG
                     (w0>>12)&SR_MASK_12,		// wG
                     (w1>>8)&SR_MASK_8,                 // cB
@@ -226,25 +226,25 @@ public class Rdpfuncs {
     
     public static GBIFunc RDP_FullSync = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPFullSync();
+            graphicsDisplayProcessor.gDPFullSync();
         }
     };
     
     public static GBIFunc RDP_TileSync = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPTileSync();
+            graphicsDisplayProcessor.gDPTileSync();
         }
     };
     
     public static GBIFunc RDP_PipeSync = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPPipeSync();
+            graphicsDisplayProcessor.gDPPipeSync();
         }
     };
     
     public static GBIFunc RDP_LoadSync = new GBIFunc() {
         public void exec(int w0, int w1) {
-            gdp.gDPLoadSync();
+            graphicsDisplayProcessor.gDPLoadSync();
         }
     };
     
@@ -258,7 +258,7 @@ public class Rdpfuncs {
 //            PC[PCi] += 8;
             int w3 = gsp.getCmd();
             
-            gdp.gDPTextureRectangleFlip(((w1>>12)&SR_MASK_12) * FIXED2FLOATRECIP2,                // ulx
+            graphicsDisplayProcessor.gDPTextureRectangleFlip(((w1>>12)&SR_MASK_12) * FIXED2FLOATRECIP2,                // ulx
                     (w1&SR_MASK_12) * FIXED2FLOATRECIP2,                      // uly
                     ((w0>>12)&SR_MASK_12) * FIXED2FLOATRECIP2,                // lrx
                     (w0&SR_MASK_12) * FIXED2FLOATRECIP2,                      // lry
@@ -280,7 +280,7 @@ public class Rdpfuncs {
 //            PC[PCi] += 8;
             int w3 = gsp.getCmd();
             
-            gdp.gDPTextureRectangle(((w1>>12)&SR_MASK_12) * FIXED2FLOATRECIP2,                    // ulx
+            graphicsDisplayProcessor.gDPTextureRectangle(((w1>>12)&SR_MASK_12) * FIXED2FLOATRECIP2,                    // ulx
                     (w1&SR_MASK_12) * FIXED2FLOATRECIP2,                          // uly
                     ((w0>>12)&SR_MASK_12) * FIXED2FLOATRECIP2,                    // lrx
                     (w0&SR_MASK_12) * FIXED2FLOATRECIP2,                          // lry
@@ -293,9 +293,9 @@ public class Rdpfuncs {
         }
     };
     
-    public static void RDP_Init(Gsp rsp, Gdp rdp) {
+    public static void RDP_Init(Gsp rsp, GraphicsDisplayProcessor rdp) {
         gsp = rsp;
-        gdp = rdp;
+        graphicsDisplayProcessor = rdp;
         // Initialize RDP commands to RDP_UNKNOWN
         for (int i = 0xC8; i <= 0xCF; i++)
             gsp.setUcode(i, RDP_Unknown);

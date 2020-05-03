@@ -75,7 +75,7 @@ public class OpenGl {
             GLN64jPlugin.camera = new FirstPersonCamera();
             GingerGL gingerGL = new GingerGL();
             gingerGL.setup(new GingerHandler());
-            Rsp.gsp.changed = Rsp.gdp.changed = 0xFFFFFFFF;
+            RealitySignalProcessor.gsp.changed = RealitySignalProcessor.graphicsDisplayProcessor.changed = 0xFFFFFFFF;
         }
         
         public void display(GLAutoDrawable gLDrawable) {
@@ -84,25 +84,25 @@ public class OpenGl {
                 OpenGlGdp.VI_UpdateSize();
                 OpenGlGdp.OGL_UpdateScale();
 
-                Rsp.gdp.gDPSetAlphaCompare(Gbi.G_AC_NONE); // 0
-                Rsp.gdp.gDPSetDepthSource(Gbi.G_ZS_PIXEL); // 0
+                RealitySignalProcessor.graphicsDisplayProcessor.gDPSetAlphaCompare(Gbi.G_AC_NONE); // 0
+                RealitySignalProcessor.graphicsDisplayProcessor.gDPSetDepthSource(Gbi.G_ZS_PIXEL); // 0
 
-                Rsp.gdp.gDPSetRenderMode(0, 0);
+                RealitySignalProcessor.graphicsDisplayProcessor.gDPSetRenderMode(0, 0);
 
-                Rsp.gdp.gDPSetAlphaDither(Gbi.G_AD_DISABLE); // 3
-                Rsp.gdp.gDPSetColorDither(Gbi.G_CD_DISABLE); // 3
-                Rsp.gdp.gDPSetCombineKey(Gbi.G_CK_NONE); // 0
-                Rsp.gdp.gDPSetTextureConvert(Gbi.G_TC_FILT); // 6
-                Rsp.gdp.gDPSetTextureFilter(Gbi.G_TF_POINT); // 0
-                Rsp.gdp.gDPSetTextureLUT(Gbi.G_TT_NONE); // 0
-                Rsp.gdp.gDPSetTextureLOD(Gbi.G_TL_TILE); // 0
-                Rsp.gdp.gDPSetTextureDetail(Gbi.G_TD_CLAMP); // 0
-                Rsp.gdp.gDPSetTexturePersp(Gbi.G_TP_PERSP); // 1
-                Rsp.gdp.gDPSetCycleType(Gbi.G_CYC_1CYCLE); // 0
-                Rsp.gdp.gDPPipelineMode(Gbi.G_PM_NPRIMITIVE); // 0
+                RealitySignalProcessor.graphicsDisplayProcessor.gDPSetAlphaDither(Gbi.G_AD_DISABLE); // 3
+                RealitySignalProcessor.graphicsDisplayProcessor.gDPSetColorDither(Gbi.G_CD_DISABLE); // 3
+                RealitySignalProcessor.graphicsDisplayProcessor.gDPSetCombineKey(Gbi.G_CK_NONE); // 0
+                RealitySignalProcessor.graphicsDisplayProcessor.gDPSetTextureConvert(Gbi.G_TC_FILT); // 6
+                RealitySignalProcessor.graphicsDisplayProcessor.gDPSetTextureFilter(Gbi.G_TF_POINT); // 0
+                RealitySignalProcessor.graphicsDisplayProcessor.gDPSetTextureLUT(Gbi.G_TT_NONE); // 0
+                RealitySignalProcessor.graphicsDisplayProcessor.gDPSetTextureLOD(Gbi.G_TL_TILE); // 0
+                RealitySignalProcessor.graphicsDisplayProcessor.gDPSetTextureDetail(Gbi.G_TD_CLAMP); // 0
+                RealitySignalProcessor.graphicsDisplayProcessor.gDPSetTexturePersp(Gbi.G_TP_PERSP); // 1
+                RealitySignalProcessor.graphicsDisplayProcessor.gDPSetCycleType(Gbi.G_CYC_1CYCLE); // 0
+                RealitySignalProcessor.graphicsDisplayProcessor.gDPPipelineMode(Gbi.G_PM_NPRIMITIVE); // 0
 
-                Rsp.gsp.loadUcode(uc_start, uc_dstart);
-                Rsp.gsp.RSP_ProcessDList();
+                RealitySignalProcessor.gsp.loadUcode(uc_start, uc_dstart);
+                RealitySignalProcessor.gsp.RSP_ProcessDList();
                 Window.swapBuffers();
             }
             catch (Exception e) {
@@ -158,10 +158,10 @@ public class OpenGl {
     }
 
     private static void OGL_UpdateCullFace() {
-        if ((Rsp.gsp.geometryMode & Gbi.G_CULL_BOTH)!=0) {
+        if ((RealitySignalProcessor.gsp.geometryMode & Gbi.G_CULL_BOTH)!=0) {
             gl.glEnable(GL.GL_CULL_FACE);
             
-            if ((Rsp.gsp.geometryMode & Gbi.G_CULL_BACK)!=0)
+            if ((RealitySignalProcessor.gsp.geometryMode & Gbi.G_CULL_BACK)!=0)
                 gl.glCullFace(GL.GL_BACK);
             else
                 gl.glCullFace(GL.GL_FRONT);
@@ -170,18 +170,18 @@ public class OpenGl {
     }
     
     public static void OGL_GspUpdateStates() {
-        if ((Rsp.gsp.changed & Gsp.CHANGED_GEOMETRYMODE) != 0) {
+        if ((RealitySignalProcessor.gsp.changed & Gsp.CHANGED_GEOMETRYMODE) != 0) {
             OGL_UpdateCullFace();
                 gl.glDisable(GL.GL_FOG);
-            Rsp.gsp.changed &= ~Gsp.CHANGED_GEOMETRYMODE;
+            RealitySignalProcessor.gsp.changed &= ~Gsp.CHANGED_GEOMETRYMODE;
         }
         
-        if ((Rsp.gsp.geometryMode & Gbi.G_ZBUFFER) != 0)
+        if ((RealitySignalProcessor.gsp.geometryMode & Gbi.G_ZBUFFER) != 0)
             gl.glEnable(GL.GL_DEPTH_TEST);
         else
             gl.glDisable(GL.GL_DEPTH_TEST);
         
-        Rsp.gsp.changed &= Gsp.CHANGED_MATRIX;
+        RealitySignalProcessor.gsp.changed &= Gsp.CHANGED_MATRIX;
     }
     
 }

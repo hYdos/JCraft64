@@ -5,7 +5,7 @@ import com.github.hydos.ginger.engine.opengl.render.renderers.GLGLQuadRenderer;
 import com.github.hydos.ginger.engine.opengl.render.renderers.GLGLTriRenderer;
 import me.hydos.J64.util.debug.Debug;
 import gln64j.rsp.Gsp;
-import gln64j.rdp.Gdp;
+import gln64j.rdp.GraphicsDisplayProcessor;
 
 import java.nio.ByteBuffer;
 import javax.swing.JFrame;
@@ -136,8 +136,8 @@ public class GLN64jPlugin implements GfxPlugin {
         if (DEBUG) System.out.println("GFX Plugin (" + name + ") romOpen.");
         OpenGl.uc_start = OpenGl.uc_dstart = 0;
         RDRAMSize = RDRAM.capacity();
-        Rsp.gsp = new Gsp(RDRAM, DMEM);
-        Rsp.gdp = new Gdp(CheckInterrupts, REG);
+        RealitySignalProcessor.gsp = new Gsp(RDRAM, DMEM);
+        RealitySignalProcessor.graphicsDisplayProcessor = new GraphicsDisplayProcessor(CheckInterrupts, REG);
         OpenGl.OGL_Start();
 
         OpenGlGdp.OGL_ResizeWindow();
