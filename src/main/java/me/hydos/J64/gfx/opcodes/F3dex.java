@@ -1,13 +1,11 @@
 package me.hydos.J64.gfx.opcodes;
 
-import me.hydos.J64.gfx.rdp.Gdp;
-import me.hydos.J64.gfx.rsp.Gsp;
-
-import static me.hydos.J64.emu.util.debug.Debug.*;
-
-import me.hydos.J64.gfx.rsp.GBIFunc;
-
+import static me.hydos.J64.emu.util.debug.Debug.DEBUG_MICROCODE;
 import static me.hydos.J64.gfx.Gbi.*;
+
+import me.hydos.J64.gfx.rdp.Gdp;
+import me.hydos.J64.gfx.rsp.GBIFunc;
+import me.hydos.J64.gfx.rsp.Gsp;
 
 public class F3dex extends F3d {
 
@@ -53,50 +51,58 @@ public class F3dex extends F3d {
 
 
     public static GBIFunc F3DEX_Vtx = new GBIFunc() {
-        public void exec(int w0, int w1) {
+        @Override
+		public void exec(int w0, int w1) {
             gsp.gSPVertex(gsp.RSP_SegmentToPhysical(w1), (w0 >>> 10) & SR_MASK_6, (w0 >>> 17) & SR_MASK_7);
         }
     };
 
     public static GBIFunc F3DEX_Tri1 = new GBIFunc() {
-        public void exec(int w0, int w1) {
+        @Override
+		public void exec(int w0, int w1) {
             gsp.gSP1Triangle((w1 >> 17) & SR_MASK_7, (w1 >> 9) & SR_MASK_7, (w1 >> 1) & SR_MASK_7, 0);
         }
     };
 
     public static GBIFunc F3DEX_CullDL = new GBIFunc() {
-        public void exec(int w0, int w1) {
+        @Override
+		public void exec(int w0, int w1) {
             gsp.gSPCullDisplayList((w0 >> 1) & SR_MASK_15, (w1 >> 1) & SR_MASK_15);
         }
     };
 
     public static GBIFunc F3DEX_ModifyVtx = new GBIFunc() {
-        public void exec(int w0, int w1) {
+        @Override
+		public void exec(int w0, int w1) {
             gsp.gSPModifyVertex((w0 >> 1) & SR_MASK_15, (w0 >> 16) & SR_MASK_8, w1);
         }
     };
 
     public static GBIFunc F3DEX_Tri2 = new GBIFunc() {
-        public void exec(int w0, int w1) {
+        @Override
+		public void exec(int w0, int w1) {
             gsp.gSP2Triangles((w0 >> 17) & SR_MASK_7, (w0 >> 9) & SR_MASK_7, (w0 >> 1) & SR_MASK_7, 0,
                     (w1 >> 17) & SR_MASK_7, (w1 >> 9) & SR_MASK_7, (w1 >> 1) & SR_MASK_7, 0);
         }
     };
 
     public static GBIFunc F3DEX_Quad = new GBIFunc() {
-        public void exec(int w0, int w1) {
+        @Override
+		public void exec(int w0, int w1) {
             gsp.gSP1Quadrangle((w1 >> 25) & SR_MASK_7, (w1 >> 17) & SR_MASK_7, (w1 >> 9) & SR_MASK_7, (w1 >> 1) & SR_MASK_7);
         }
     };
 
     public static GBIFunc F3DEX_Branch_Z = new GBIFunc() {
-        public void exec(int w0, int w1) {
+        @Override
+		public void exec(int w0, int w1) {
             gsp.gSPBranchLessZ(gsp.RSP_SegmentToPhysical(F3d.half_1), (w0 >> 1) & SR_MASK_11, w1);
         }
     };
 
     public static GBIFunc F3DEX_Load_uCode = new GBIFunc() {
-        public void exec(int w0, int w1) {
+        @Override
+		public void exec(int w0, int w1) {
             gsp.gSPLoadUcodeEx(w1, F3d.half_1, (short) ((w0 & SR_MASK_16) + 1));
         }
     };
@@ -134,7 +140,7 @@ public class F3dex extends F3d {
         G_MWO_bLIGHT_8 = F3DEX_MWO_bLIGHT_8;
     }
 
-    public static void F3DEX_Init(Gsp rsp, Gdp rdp) {
+    public static void init(Gsp rsp, Gdp rdp) {
         gsp = rsp;
         gdp = rdp;
         GBI_InitFlags();
@@ -168,34 +174,34 @@ public class F3dex extends F3d {
 
         gsp.pcStackSize = 18;
 
-        gsp.setUcode(G_SPNOOP, F3d.F3D_SPNoOp);
-        gsp.setUcode(G_MTX, F3d.F3D_Mtx);
-        gsp.setUcode(G_RESERVED0, F3d.F3D_Reserved0);
-        gsp.setUcode(G_MOVEMEM, F3d.F3D_MoveMem);
-        gsp.setUcode(G_VTX, F3DEX_Vtx);
-        gsp.setUcode(G_RESERVED1, F3d.F3D_Reserved1);
-        gsp.setUcode(G_DL, F3d.F3D_DList);
-        gsp.setUcode(G_RESERVED2, F3d.F3D_Reserved2);
-        gsp.setUcode(G_RESERVED3, F3d.F3D_Reserved3);
-        gsp.setUcode(G_SPRITE2D_BASE, F3d.F3D_Sprite2D_Base);
+        gsp.setGBI(G_SPNOOP, F3d.F3D_SPNoOp);
+        gsp.setGBI(G_MTX, F3d.F3D_Mtx);
+        gsp.setGBI(G_RESERVED0, F3d.F3D_Reserved0);
+        gsp.setGBI(G_MOVEMEM, F3d.F3D_MoveMem);
+        gsp.setGBI(G_VTX, F3DEX_Vtx);
+        gsp.setGBI(G_RESERVED1, F3d.F3D_Reserved1);
+        gsp.setGBI(G_DL, F3d.F3D_DList);
+        gsp.setGBI(G_RESERVED2, F3d.F3D_Reserved2);
+        gsp.setGBI(G_RESERVED3, F3d.F3D_Reserved3);
+        gsp.setGBI(G_SPRITE2D_BASE, F3d.F3D_Sprite2D_Base);
 
-        gsp.setUcode(G_TRI1, F3DEX_Tri1);
-        gsp.setUcode(G_CULLDL, F3DEX_CullDL);
-        gsp.setUcode(G_POPMTX, F3d.F3D_PopMtx);
-        gsp.setUcode(G_MOVEWORD, F3d.F3D_MoveWord);
-        gsp.setUcode(G_TEXTURE, F3d.F3D_Texture);
-        gsp.setUcode(G_SETOTHERMODE_H, F3d.F3D_SetOtherMode_H);
-        gsp.setUcode(G_SETOTHERMODE_L, F3d.F3D_SetOtherMode_L);
-        gsp.setUcode(G_ENDDL, F3d.F3D_EndDL);
-        gsp.setUcode(G_SETGEOMETRYMODE, F3d.F3D_SetGeometryMode);
-        gsp.setUcode(G_CLEARGEOMETRYMODE, F3d.F3D_ClearGeometryMode);
-        gsp.setUcode(G_QUAD, F3DEX_Quad);
-        gsp.setUcode(G_RDPHALF_1, F3d.F3D_RDPHalf_1);
-        gsp.setUcode(G_RDPHALF_2, F3d.F3D_RDPHalf_2);
-        gsp.setUcode(G_MODIFYVTX, F3DEX_ModifyVtx);
-        gsp.setUcode(G_TRI2, F3DEX_Tri2);
-        gsp.setUcode(G_BRANCH_Z, F3DEX_Branch_Z);
-        gsp.setUcode(G_LOAD_UCODE, F3DEX_Load_uCode);
+        gsp.setGBI(G_TRI1, F3DEX_Tri1);
+        gsp.setGBI(G_CULLDL, F3DEX_CullDL);
+        gsp.setGBI(G_POPMTX, F3d.F3D_PopMtx);
+        gsp.setGBI(G_MOVEWORD, F3d.F3D_MoveWord);
+        gsp.setGBI(G_TEXTURE, F3d.F3D_Texture);
+        gsp.setGBI(G_SETOTHERMODE_H, F3d.F3D_SetOtherMode_H);
+        gsp.setGBI(G_SETOTHERMODE_L, F3d.F3D_SetOtherMode_L);
+        gsp.setGBI(G_ENDDL, F3d.F3D_EndDL);
+        gsp.setGBI(G_SETGEOMETRYMODE, F3d.F3D_SetGeometryMode);
+        gsp.setGBI(G_CLEARGEOMETRYMODE, F3d.F3D_ClearGeometryMode);
+        gsp.setGBI(G_QUAD, F3DEX_Quad);
+        gsp.setGBI(G_RDPHALF_1, F3d.F3D_RDPHalf_1);
+        gsp.setGBI(G_RDPHALF_2, F3d.F3D_RDPHalf_2);
+        gsp.setGBI(G_MODIFYVTX, F3DEX_ModifyVtx);
+        gsp.setGBI(G_TRI2, F3DEX_Tri2);
+        gsp.setGBI(G_BRANCH_Z, F3DEX_Branch_Z);
+        gsp.setGBI(G_LOAD_UCODE, F3DEX_Load_uCode);
 
         if (DEBUG_MICROCODE) System.out.println("Initialized F3DEX opcodes");
     }
